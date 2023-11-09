@@ -18,6 +18,8 @@ Make sure you `pip install` ANY modules that you're gonna use through the virtua
 
 MAKE SURE THAT YOUR GENERATED `env` FOLDER IS IN .gitignore.
 
+when ur finished working on the project for the day, run `deactivate` to exit the virtual environment
+
 ---------------------------------
 
 This Game will contain an unbeatable A.I and a 3d Interactive User Interface.
