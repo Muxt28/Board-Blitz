@@ -17,4 +17,4 @@ Predicted Deadline will be --/--/2023
 
 *[ Please be aware that this is an educational project and any copyrighted material used will not be publicly advertised as our own products ]*
 ---------------
-Tic-Tac-Toe © - Copyright 2023 -  
+© Copyright 2023 under the MIT License --- Tic-Tac-Toe 
