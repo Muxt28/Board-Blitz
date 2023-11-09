@@ -1,5 +1,4 @@
-Muqsit - Backend
-Uzair - Frontend
+Tic Tac Toe
 ---------------------------------
 
 This Game will contain an unbeatable A.I and a 3d Interactive User Interface.
