@@ -1,21 +1,20 @@
 Tic Tac Toe
 
 ### Instructions to run from source:
-in the Vscode TERMINAL make sure you're cd'd in the project directory then do `python -m venv env`.
+in the Vscode terminal make sure you're cd'd in the project directory then do `python -m venv env`.
 
-then run:
+Then run:
 `.\env\Scripts\activate` to activate the virtual environment.
 
 At this point the terminal should say (env).
 
-then run `pip install -r requirements.txt` to install the necessary modules required to build the project.
+Then run `pip install -r requirements.txt` to install the necessary modules required to build the project.
 
-And ur done.
+And you're done. If you run `pip list` it should display all the modules/libraries that we are using.
 
-make sure u pip install ANY modules that you're gonna use through the virtual environment, 
-and run `pip freeze > requirements.txt` to generate an updated requirements.txt file.
+Make sure you `pip install` ANY modules that you're gonna use through the virtual environment, and run `pip freeze > requirements.txt` to generate an updated requirements.txt file.
 
-MAKE SURE THAT YOUR GENERATED ENV FOLDER IS IN .gitignore 
+MAKE SURE THAT YOUR GENERATED `env` FOLDER IS IN .gitignore.
 
 ---------------------------------
 
