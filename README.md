@@ -12,6 +12,8 @@ Then run `pip install -r requirements.txt` to install the necessary modules requ
 
 And you're done. If you run `pip list` it should display all the modules/libraries that we are using.
 
+TO RUN ANY FILE - make sure your virtual env is activated and do `python fileName.py`
+
 Make sure you `pip install` ANY modules that you're gonna use through the virtual environment, and run `pip freeze > requirements.txt` to generate an updated requirements.txt file.
 
 MAKE SURE THAT YOUR GENERATED `env` FOLDER IS IN .gitignore.
