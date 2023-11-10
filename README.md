@@ -1,4 +1,4 @@
-# Tic Tac Toe
+# Board Blitz
 
 ### Instructions to run from source:
 in the Vscode terminal make sure you're cd'd in the project directory then do `python -m venv env`.
@@ -38,4 +38,4 @@ Predicted Deadline will be --/--/2023
 
 *[ Please be aware that this is an educational project and any copyrighted material used will not be publicly advertised as our own products ]*
 ---------------
-© Copyright 2023 under the MIT License --- Tic-Tac-Toe 
+##### © Copyright 2023 under the MIT License --- Board Blitz
