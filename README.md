@@ -1,4 +1,4 @@
-Tic Tac Toe
+# Tic Tac Toe
 
 ### Instructions to run from source:
 in the Vscode terminal make sure you're cd'd in the project directory then do `python -m venv env`.
