@@ -1,6 +1,8 @@
 # global
 env/
 *.blend?
+__pycache__/
+models_compressed/
 
 #Uzairs Ignores:
 PERSONAL_UZI/
