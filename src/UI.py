@@ -14,7 +14,6 @@ def ShowLoadingSplash():
         color = color.black 
     )
 
-    pass
 
 def MainMenu():
     pass
