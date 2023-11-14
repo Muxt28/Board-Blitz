@@ -28,7 +28,8 @@ import Models
 
 app = Ursina (
     title = "Board Blitz",
-    borderless=False,
+    borderless = False,
+    icon = r".\Assets\Logo.ico"
 )
 
 window.fullscreen = False
