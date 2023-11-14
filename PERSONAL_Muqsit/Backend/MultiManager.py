@@ -87,7 +87,7 @@ class GameManager:
         return self.GamePlay()
         
     
-    def GamePlay(self):
+    def GamePlay(self): 
         win = False
         while (self.running or self.BoxesFilled < 9) and (win == False):
             print(f'Turns : {self.BoxesFilled}')

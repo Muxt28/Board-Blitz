@@ -12,7 +12,7 @@ class VerifyWin:
                 print(f"{' '.join(rows)}")
         self.__VerifyWin()
     
-    def __VerifyWin(self):
+    def __VerifyWin(self): 
         for rows in range(3):
             if self.board[rows] == ['X','X','X']:
                 print('*[ Player 1 has Won ]*')

@@ -43,7 +43,7 @@ def SendPorts(clientCONN, LobbyCode):
         portsUsed.remove(GamePort)
     
 
-while running:
+while running: 
     try:
         clientCONN, _ = server.accept()
         clientCONN.send(b'*[ Waiting For Opponent ]*')
