@@ -1,6 +1,7 @@
 import socket
 import sys
 import pickle
+from time import sleep
 
 class VerifyWin:
     def __init__(self, board, client, gamePlayers):
@@ -12,7 +13,7 @@ class VerifyWin:
         print('boardSend')
         for elements in self.clientsConnected:
             elements.send(pickle.dumps(self.board))
-        
+
         return self.__VerifyWin()
     
     def __VerifyWin(self):
@@ -89,21 +90,27 @@ class GameManager:
     
     def GamePlay(self): 
         win = False
+
+        for _ in range(2):
+            self.clientsConnected[_].send(f'{str(_)}'.encode())
+
         while (self.running or self.BoxesFilled < 9) and (win == False):
-            print(f'Turns : {self.BoxesFilled}')
+            # print(f'Turns : {self.BoxesFilled}')
+            print('*[ New Round ]*')                                                                                                                                                                      
             if self.BoxesFilled % 2 == 0:
                 self.player = self.clientsConnected[0]
+                self.currentPlayer = 'X'
                 for elements in self.clientsConnected:
                     elements.send(b'\n*[ Player 1 Turn ]*')
-                self.currentPlayer = 'X'
             else:
                 self.player = self.clientsConnected[1]
+                self.currentPlayer = 'O'
                 for elements in self.clientsConnected:
                     elements.send(b'\n*[ Player 2 Turn ]*')
-                self.currentPlayer = 'O'
 
-            win = VerifyWin.returnBoard(VerifyWin(self.Update_board(), self.player, self.clientsConnected))                                                                                                                                                                            
-            print('*[ Sent ]*')
+            board = self.Update_board()
+
+            win = VerifyWin.returnBoard(VerifyWin(board, self.player, self.clientsConnected))
             self.BoxesFilled += 1
 
         return 'Disconnected'
@@ -117,8 +124,8 @@ class GameManager:
     def __UserInput(self):
         choice = ''
         while choice not in self.ValidCoordinates:
-            self.player.send('>'.encode())
             choice = self.player.recv(1024).decode()
+        print(choice)
 
         return int(choice[0]), int(choice[1])
 
