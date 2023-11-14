@@ -2,61 +2,61 @@
 
 # Frontend Written by Uzair
 # Backend written by Muqsit
+# AI written by Safwaan
 
-# python .\src\main.py
-from ursina import (
-    Ursina,
-    window,
-    Entity,
-    input_handler,
-    color,
-    time, 
-    Sky, 
-    EditorCamera, 
-    mesh_importer, 
-    scene,
-    DirectionalLight,
-    PointLight,
-    vec3,
-    camera,
-    mouse
-)
+# python src\main.py
 
-from ursina.shaders import *
-import UI
+import ursina
+import ursina.shaders as shaders
+import asyncio
+import time
+import InputHandler
 import Models
+import UserInterface
 
-app = Ursina (
+app = ursina.Ursina (
     title = "Board Blitz",
     borderless = False,
-    icon = r".\Assets\Logo.ico"
+    icon = ".\\Assets\\Logo.ico"
 )
 
-window.fullscreen = False
-window.exit_button.visible = False
-window.fps_counter.enabled = True
-window.forced_aspect_ratio = (16/9)
+# Optimise input
+ursina.window.fullscreen = False
+ursina.window.exit_button.visible = False
+ursina.window.fps_counter.enabled = True
+ursina.window.forced_aspect_ratio = (16/9)
 
-Sky()
+ursina.Sky()
 CameraPosition = (0,20,-25)
 CameraRotation = (40,0,0)
 
-camera.orthographic = False
-camera.fov = 90
-camera.position = CameraPosition
-camera.rotation = CameraRotation
+ursina.camera.orthographic = False
+ursina.camera.fov = 90
+ursina.camera.position = CameraPosition
+ursina.camera.rotation = CameraRotation
 
 #// ENTITIES
-Board = Entity(model=Models.GetModelPath("3x3"), shader=basic_lighting_shader, color=color.rgb(255, 226, 200))
-#pivot = Entity(rotation =(-45,0,0))
-#Light = PointLight(parent=pivot, y=10, z=50, shadows=True)
-#Cube = Entity(parent=Light, model='cube', size = (10,10,10))
+Board = ursina.Entity(model=Models.GetModelPath("3x3"), shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200))
+SplashScreen = UserInterface.ShowLoadingSplash()
+ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=4)
+#ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=4)
+print("yo")
+
+#InputHandler.SetInputState("TrackingInput", True)
 
 # updates every frame loop
 def update():
+    # if InputHandler.INPUT_STATES["TrackingInput"]: # It's more efficient to evaluate a single boolean than evaluating the length of the array
+    #     InputHandler.HandleKeys(ursina.input_handler.held_keys)
+    # if InputHandler.INPUT_STATES["TrackingMouse"]:
+    #     InputHandler.HandleMouse(ursina.input_handler.input())
     pass
 
-#UI.ShowLoadingSplash()
-#UI.MainMenu()
+def input(key):
+    if InputHandler.GetInputState("TrackingInput"): # It's more efficient to evaluate a single boolean than evaluating the length of the array
+        InputHandler.HandleKeys(key)
+    if InputHandler.GetInputState("TrackingMouse"):
+        InputHandler.HandleMouse(key)
 
+#UI.MainMenu()
 app.run()
