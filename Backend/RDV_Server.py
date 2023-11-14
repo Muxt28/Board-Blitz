@@ -5,7 +5,7 @@ from MultiManager import GameManager
 
 verificationCode = []
 ClientsConnected = []
-portsUsed = [5555]
+portsUsed = [5555, 5556]
 
 running = True
 
