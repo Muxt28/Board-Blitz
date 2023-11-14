@@ -4,11 +4,11 @@ env/
 __pycache__/
 models_compressed/
 
-#Uzairs Ignores:
-PERSONAL_UZI/
+# #Uzairs Ignores:
+# PERSONAL_UZI/
 
-#Muqsits ignores:
-PERSONAL_Muqsit/
+# #Muqsits ignores:
+# PERSONAL_Muqsit/
 
 # #Safwaans Ignores
 # PERSONAL_Safwaan/

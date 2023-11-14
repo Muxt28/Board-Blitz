@@ -1,0 +1,7 @@
+link: https://github.com/Muxt28/Tic-Tac-Toe
+
+python .\PERSONAL_UZI\test3d.py
+
+https://www.ursinaengine.org/ursina_for_dummies.html
+https://www.ursinaengine.org/api_reference.html#Entity
+https://www.youtube.com/watch?v=NLwpI-qe9wI
