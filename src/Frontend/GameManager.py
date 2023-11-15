@@ -4,6 +4,15 @@ import ursina.shaders as shaders
 import ursina.camera as camera 
 import ursina.window as window
 
+import sys
+from queue import Queue
+from threading import Thread
+
+sys.path.append("..")
+from Backend import Library
+from Frontend import Models
+
+
 STATES = {
     "IN_MENU" : False,
     "In3x3Single" : False
@@ -12,7 +21,6 @@ STATES = {
 MENU_GLOBAL = False
 BOARD_SCENE_GLOBAL = False
 
-from Frontend import Models
 #from Main import Menu as MENUGLOBAL
 
 class Menu():
@@ -24,7 +32,6 @@ class Menu():
         self.maxTilt = 10
         self.MainScene = ursina.Entity(model=Models.GetModelPath("Beach"), scale=10, texture = Models.GetTexture("Beach"), shader=shaders.basic_lighting_shader)
         self.Water = ursina.Entity(model=Models.GetModelPath("Water"), scale=10, texture = Models.GetTexture("Water"), shader=shaders.basic_lighting_shader)
-        #self.Trees = ursina.Entity(model=Models.GetModelPath("Trees"), scale=10)
         self.XOModel = ursina.Entity(model=Models.GetModelPath("XOModel"), scale=10, shader=shaders.basic_lighting_shader, rotation = (0,100,0), position = (-1,-.5,-.6))
         ursina.invoke(self.showMainUI, delay=(4 if firstTime else 0))
         ursina.camera.position = self.ROOTCAMERAPOS
@@ -75,7 +82,6 @@ class Menu():
             )
 
     def destroy(self):
-        #Cleanup
         global MENU_GLOBAL
         STATES["IN_MENU"] = False
         ursina.destroy(self.MainScene)
@@ -85,7 +91,6 @@ class Menu():
         ursina.destroy(self.List)
         MENU_GLOBAL = False
         #ursina.destroy(self.Trees)
-
 class ThreeXThreeBoardScene():
     def __init__(self) -> None:
         STATES["In3x3Single"] = True
@@ -112,9 +117,11 @@ class ThreeXThreeBoardScene():
             return 1;
         self.hasGameStarted = True
         # locked session
+        newGameInstance = Thread(target=Library.LocalPlayer)
+        #newGameInstance.__UserInput = __UserInputFrontend
+        newGameInstance.start()
+        print("started game thread from GameManager")
         
-
-    
     def destroy(self):
         global MENU_GLOBAL
         STATES["In3x3Single"] = False

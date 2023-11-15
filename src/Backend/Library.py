@@ -46,7 +46,7 @@ class VerifyWin:
 
 class LocalPlayer:
     def __init__(self):
-
+        print("running game thread")
         self.running = True
         self.BoxesFilled = 0
 
@@ -54,8 +54,10 @@ class LocalPlayer:
 
         self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
         self.board = [['-'for _ in range(3)] for _ in range(3)]
-    
+        self.GamePlay()
+        
     def GamePlay(self):
+        print("start")
         while self.running and self.BoxesFilled < 9:
             if self.BoxesFilled % 2 == 0:
                 print(f'\n*[ Player 1 Turn ]*')
@@ -125,4 +127,4 @@ class Multiplayer:
                     if Msg != '':
                         print(f'{Msg}')
 
-Multiplayer.Game_Manager(Multiplayer())
+#Multiplayer.Game_Manager(Multiplayer())
