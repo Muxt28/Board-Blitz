@@ -39,10 +39,12 @@ ursina.camera.position = (0,0,0)
 ursina.camera.rotation = (0,0,0)
 
 #Board = ursina.Entity(model=Models.GetModelPath("3x3"), shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200))
+DEBUG_MODE = False
+DELAY_GL = 4 #if DEBUG_MODE else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
-ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=4)
-ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=4)
-ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=4)
+ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
+ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
+ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
 Menu = GameManager.Menu()
 

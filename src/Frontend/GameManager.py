@@ -19,11 +19,20 @@ class Menu():
         self.MainScene = ursina.Entity(model=Models.GetModelPath("Beach"), scale=10, texture = Models.GetTexture("Beach"), shader=shaders.basic_lighting_shader)
         self.Water = ursina.Entity(model=Models.GetModelPath("Water"), scale=10, texture = Models.GetTexture("Water"), shader=shaders.basic_lighting_shader)
         #self.Trees = ursina.Entity(model=Models.GetModelPath("Trees"), scale=10)
-        self.XOModel = ursina.Entity(model=Models.GetModelPath("XOLogo"), scale=10)
+        self.XOModel = ursina.Entity(model=Models.GetModelPath("XOModel"), scale=10, shader=shaders.basic_lighting_shader, rotation = (0,100,0), position = (-1,-.5,-.6))
+        ursina.invoke(self.createUI, delay=4)
         ursina.camera.position = self.ROOTCAMERAPOS
         ursina.camera.rotation = self.ROOTCAMERAROT
         self.Water.position = self.Water.position + (0,-1.1,0)
         
+    def createUI(self):
+        self.PlayButton = ursina.Button(scale = (.2,.1), text = "Play", position = (-.4,0))
+        self.PlayButton.on_click = self.onPlayClick()
+
+    def onPlayClick(self):
+        print("click moment")
+        pass
+
     def onUpdate(self):
             x, y, z = mouse.position
             #print(ROOTCAMERAPOS)
