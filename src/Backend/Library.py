@@ -46,7 +46,6 @@ class VerifyWin:
 
 class LocalPlayer:
     def __init__(self):
-        print("running game thread")
         self.running = True
         self.BoxesFilled = 0
 
@@ -57,7 +56,6 @@ class LocalPlayer:
         self.GamePlay()
         
     def GamePlay(self):
-        print("start")
         while self.running and self.BoxesFilled < 9:
             if self.BoxesFilled % 2 == 0:
                 print(f'\n*[ Player 1 Turn ]*')
