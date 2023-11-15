@@ -5,7 +5,8 @@ __pycache__/
 models_compressed/
 
 # #Uzairs Ignores:
-# PERSONAL_UZI/
+PERSONAL_UZI/Assets/ 
+# useless stuff
 
 # #Muqsits ignores:
 # PERSONAL_Muqsit/
