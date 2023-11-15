@@ -5,12 +5,16 @@ from MultiManager import GameManager
 
 verificationCode = []
 ClientsConnected = []
-portsUsed = [5555]
+portsUsed = [5555, 5556]
 
 running = True
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('0.0.0.0', 5555))
+try:
+    server.bind(('0.0.0.0', 5555))
+except Exception:
+    server.bind(('0.0.0.0', 5556))
+    
 server.listen()
 
 def Check4Opponent(clientCONN):
@@ -39,7 +43,7 @@ def SendPorts(clientCONN, LobbyCode):
 
             portsUsed.append(GamePort)
             sent = True
-    if GameManager.Initialise(GameManager(GamePort, portsUsed)) == 'Disconnected':
+    if GameManager.Initialise(GameManager(GamePort)) == 'Disconnected':
         portsUsed.remove(GamePort)
     
 

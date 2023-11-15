@@ -84,39 +84,45 @@ class LocalPlayer:
 
 class Multiplayer:
     def __init__(self):
-        self.GamePlay = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_ADDR = ('35.176.207.55', 5556)
-
+        self.GameSocket = socket.socket()
+        
         self.running = True
 
-    def ServerContact(self):
-        self.GamePlay.connect((self.server_ADDR))
-        print(self.GamePlay.recv(1024).decode())
-        self.GamePlay.send(input('Enter Code : ').encode())
-        GamePort = int(self.GamePlay.recv(1024).decode())
-        print(GamePort)
-        self.GamePlay.close()
+    def __ContactServer(self):
+        try:
+            self.GameSocket.connect(('35.176.207.55', 5555))
+        except ConnectionRefusedError:
+            self.GameSocket.connect(('35.176.207.55', 5556))
 
-        self.GamePlay = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.GamePlay.connect(('35.176.207.55', GamePort))
+        print(self.GameSocket.recv(1024).decode())
 
-        self.Manager()
+        self.GameSocket.send(input('Enter Code : ').encode())
+        
+        port = int(self.GameSocket.recv(1024).decode())
+        print(f'Port : {port}')
+        self.GameSocket.close()
 
-    def Manager(self):
+        self.GameSocket = socket.socket()
+        self.GameSocket.connect(('35.176.207.55', port))
+
+        self.playerNumber = self.GameSocket.recv(1024).decode()
+
+    def Game_Manager(self):
+        self.__ContactServer()
+
         while self.running:
-            dataReceived = self.GamePlay.recv(1024)
+            Msg = self.GameSocket.recv(1024)
             try:
-                board = pickle.loads(dataReceived)
+                board = pickle.loads(Msg)
                 for rows in board:
                     print(' '.join(rows))
             except Exception:
-                dataReceived = dataReceived.decode()
-                if  dataReceived == '>':
-                    self.GamePlay.send(input('Enter Coordinates : ').encode())    
-                elif dataReceived != '' and dataReceived != '>':
-                    print(f'Data Received : {dataReceived}')
+                Msg = Msg.decode()
+                if Msg == '*[ Your Turn ]*' or Msg == '*[ Box Occupied ]*':
+                    self.GameSocket.send(input('Enter Coordinates : ').encode())
+                    print('*[ Sent ]*')
+                else:
+                    if Msg != '':
+                        print(f'{Msg}')
 
-    
-
-Multiplayer.ServerContact(Multiplayer())
-# LocalPlayer.GamePlay(LocalPlayer())
+Multiplayer.Game_Manager(Multiplayer())
