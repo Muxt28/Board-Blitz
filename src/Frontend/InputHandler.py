@@ -1,5 +1,7 @@
 import ursina
 
+from Frontend import GameManager
+
 INPUT_STATES = {
     "TrackingInput" : False,
     "TrackingMouse" : False,
@@ -13,7 +15,7 @@ def SetInputState(TYPE, newEvaluation):
 
 
 def HandleKeys(key):
-    print(key)
+    pass
 
 def HandleMouse(key):
     print(key)
