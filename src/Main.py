@@ -38,7 +38,7 @@ ursina.camera.fov = 90
 ursina.camera.position = (0,0,0)
 ursina.camera.rotation = (0,0,0)
 
-#Board = ursina.Entity(model=Models.GetModelPath("3x3"), shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200))
+#
 DEBUG_MODE = False
 DELAY_GL = 4 #if DEBUG_MODE else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
@@ -46,21 +46,23 @@ ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-Menu = GameManager.Menu()
-
+GameManager.MENU_GLOBAL = GameManager.Menu()
+#GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
 def update():
     if GameManager.STATES["IN_MENU"]:
         # Camera stuff
-            Menu.onUpdate()
+            GameManager.MENU_GLOBAL.onUpdate()
+    if GameManager.STATES["In3x3Single"]:
+            camera.position = (10,10,10)
+            GameManager.BOARD_SCENE_GLOBAL.onUpdate()
 
 def input(key):
     if InputHandler.GetInputState("TrackingInput"):
         #InputHandler.HandleKeys(key)
         if key=="p": ## DEBUG
-            global Menu
-            del Menu
+            GameManager.MENU_GLOBAL.destroy()
         if key=="m":
-            Menu = GameManager.Menu()
+            GameManager.MENU_GLOBAL = GameManager.Menu(False)
     if InputHandler.GetInputState("TrackingMouse"):
         if key=="mouse":
             InputHandler.HandleMouse(key)

@@ -5,13 +5,18 @@ import ursina.camera as camera
 import ursina.window as window
 
 STATES = {
-    "IN_MENU" : False
+    "IN_MENU" : False,
+    "In3x3Single" : False
 }
 
+MENU_GLOBAL = False
+BOARD_SCENE_GLOBAL = False
+
 from Frontend import Models
+#from Main import Menu as MENUGLOBAL
 
 class Menu():
-    def __init__(self) -> None:
+    def __init__(self, firstTime=True) -> None:
         STATES["IN_MENU"] = True
         self.onPlayScreen = False
         self.ROOTCAMERAPOS = (8,3.5,3.4)
@@ -21,7 +26,7 @@ class Menu():
         self.Water = ursina.Entity(model=Models.GetModelPath("Water"), scale=10, texture = Models.GetTexture("Water"), shader=shaders.basic_lighting_shader)
         #self.Trees = ursina.Entity(model=Models.GetModelPath("Trees"), scale=10)
         self.XOModel = ursina.Entity(model=Models.GetModelPath("XOModel"), scale=10, shader=shaders.basic_lighting_shader, rotation = (0,100,0), position = (-1,-.5,-.6))
-        ursina.invoke(self.showMainUI, delay=4)
+        ursina.invoke(self.showMainUI, delay=(4 if firstTime else 0))
         ursina.camera.position = self.ROOTCAMERAPOS
         ursina.camera.rotation = self.ROOTCAMERAROT
         self.Water.position = self.Water.position + (0,-1.1,0)
@@ -30,26 +35,33 @@ class Menu():
         self.PlayButton = ursina.Button(scale = (.2,.1), text = "Play", position = (-.4,0))
         self.PlayButton.on_click = self.onPlayClick
         self.List = ursina.ButtonList(button_dict= {
-            'SinglePlayer' : self.singlePlayerClick,
-            'MultiPlayer' : self.multiPlayerClick,
+            'Single Player' : self.singlePlayerClick,
+            'Multiplayer' : self.multiPlayerClick,
             'Go back' : self.goBack
-        }, scale = (1,1), position = (-.8,0.1), visible=False)
+        }, scale = (1,1), position = (-.8,0.1), enabled=False, button_height=1.5)
 
     def singlePlayerClick(self):
+        #ThreeXThreeBoardScene()
+        #self.__del__()
+        global MENU_GLOBAL
+        global BOARD_SCENE_GLOBAL
+        BOARD_SCENE_GLOBAL = ThreeXThreeBoardScene()
+        MENU_GLOBAL.destroy()
         pass
-
+    
     def multiPlayerClick(self):
+        text = ursina.Text("Multiplayer is currently not supported!", color=ursina.color.red)
+        ursina.invoke(ursina.destroy, text, delay=2)
         pass
 
     def goBack(self):
         self.PlayButton.visible = True
-        self.List.visible = False
+        self.List.enabled = False
         pass
 
     def onPlayClick(self):
-        print("click moment")
         self.PlayButton.visible = False
-        self.List.visible = True
+        self.List.enabled = True
         
 
     def onUpdate(self):
@@ -62,23 +74,33 @@ class Menu():
                 0,
             )
 
-    def __del__(self):
+    def destroy(self):
         #Cleanup
+        global MENU_GLOBAL
+        STATES["IN_MENU"] = False
         ursina.destroy(self.MainScene)
         ursina.destroy(self.Water)
         ursina.destroy(self.XOModel)
         ursina.destroy(self.PlayButton)
         ursina.destroy(self.List)
+        MENU_GLOBAL = False
         #ursina.destroy(self.Trees)
-        STATES["IN_MENU"] = False
-
 
 class ThreeXThreeBoardScene():
     def __init__(self) -> None:
-        pass
+        STATES["In3x3Single"] = True
+        self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10)
+        self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
+        self.Back.on_click = self.destroy
+        self.Back.text_entity.scale = 14
 
-    def __del__(self):
-        pass
+    def destroy(self):
+        global MENU_GLOBAL
+        STATES["In3x3Single"] = False
+        ursina.destroy(self.Board)
+        ursina.destroy(self.Back)
+
+        MENU_GLOBAL = Menu(False)
 
     def onUpdate(self):
         pass
