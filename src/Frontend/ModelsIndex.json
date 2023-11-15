@@ -6,5 +6,6 @@
     "7x7" : "New7x7Board.obj",
     "Beach" : "PalmScene\\BeachPart.obj",
     "Water" : "PalmScene\\Water.obj",
-    "Trees" : "PalmScene\\Trees.obj"
+    "Trees" : "PalmScene\\Trees.obj",
+    "XOModel" : "XOLogo.obj"
 }

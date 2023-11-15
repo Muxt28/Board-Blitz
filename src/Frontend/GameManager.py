@@ -18,7 +18,8 @@ class Menu():
         self.maxTilt = 10
         self.MainScene = ursina.Entity(model=Models.GetModelPath("Beach"), scale=10, texture = Models.GetTexture("Beach"), shader=shaders.basic_lighting_shader)
         self.Water = ursina.Entity(model=Models.GetModelPath("Water"), scale=10, texture = Models.GetTexture("Water"), shader=shaders.basic_lighting_shader)
-        self.Trees = ursina.Entity(model=Models.GetModelPath("Trees"), scale=10)
+        #self.Trees = ursina.Entity(model=Models.GetModelPath("Trees"), scale=10)
+        self.XOModel = ursina.Entity(model=Models.GetModelPath("XOLogo"), scale=10)
         ursina.camera.position = self.ROOTCAMERAPOS
         ursina.camera.rotation = self.ROOTCAMERAROT
         self.Water.position = self.Water.position + (0,-1.1,0)
@@ -37,7 +38,8 @@ class Menu():
         #Cleanup
         ursina.destroy(self.MainScene)
         ursina.destroy(self.Water)
-        ursina.destroy(self.Trees)
+        ursina.destroy(self.XOModel)
+        #ursina.destroy(self.Trees)
         STATES["IN_MENU"] = False
 
 
