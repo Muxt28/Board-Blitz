@@ -9,7 +9,7 @@ import ursina.shaders as shaders
 import ursina.mouse as mouse
 import ursina.camera as camera 
 import ursina.window as window
-
+import math
 from Frontend import (
     GameManager,
     InputHandler,
@@ -40,32 +40,41 @@ ursina.camera.rotation = (0,0,0)
 
 #
 DEBUG_MODE = False
-DELAY_GL = 4 #if DEBUG_MODE else 0
+DELAY_GL = 4 if (DEBUG_MODE!=True) else 0 #if DEBUG_MODE else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
 ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-GameManager.MENU_GLOBAL = GameManager.Menu()
+GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
 #GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
+
 def update():
     if GameManager.STATES["IN_MENU"]:
-        # Camera stuff
             GameManager.MENU_GLOBAL.onUpdate()
     if GameManager.STATES["In3x3Single"]:
-            camera.position = (10,10,10)
+            camera.position = (0,200,-230)
+            camera.rotation = (45,0,0)
+            camera.look_at = ursina.Vec3(0,0,0)
             GameManager.BOARD_SCENE_GLOBAL.onUpdate()
 
 def input(key):
     if InputHandler.GetInputState("TrackingInput"):
         #InputHandler.HandleKeys(key)
-        if key=="p": ## DEBUG
-            GameManager.MENU_GLOBAL.destroy()
-        if key=="m":
-            GameManager.MENU_GLOBAL = GameManager.Menu(False)
-    if InputHandler.GetInputState("TrackingMouse"):
-        if key=="mouse":
-            InputHandler.HandleMouse(key)
+        #if key=="p": ## DEBUG
+        #    GameManager.MENU_GLOBAL.destroy()
+        #if key=="m":
+        #    GameManager.MENU_GLOBAL = GameManager.Menu(False)
+        # 
+        pass
 
+    if InputHandler.GetInputState("TrackingMouse"):
+        if GameManager.STATES["In3x3Single"]:
+            InputHandler.HandleMouse(key)
+            if key=="right mouse down":
+                mouse.locked = True
+            if key == "right mouse up":
+                mouse.locked = False
+                
 #UI.MainMenu()
 app.run()

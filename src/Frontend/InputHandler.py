@@ -18,4 +18,4 @@ def HandleKeys(key):
     pass
 
 def HandleMouse(key):
-    print(key)
+    pass

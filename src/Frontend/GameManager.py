@@ -93,12 +93,34 @@ class ThreeXThreeBoardScene():
         self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
+        self.hasGameStarted=False
+        self.StatusText = ursina.Text(
+            text="The game will be starting soon...",
+            position = ursina.window.top,
+            origin = (0,1),
+            scale = 1.6
+            )
+        self.startGame()
+        #self.Text = ursina.Text("The game is starting soon...")
 
+    def setStatusText(self, text):
+        self.StatusText.text = text
+    
+    def startGame(self):
+        if self.hasGameStarted:
+            print("The game instance has already started!")
+            return 1;
+        self.hasGameStarted = True
+        # locked session
+        
+
+    
     def destroy(self):
         global MENU_GLOBAL
         STATES["In3x3Single"] = False
         ursina.destroy(self.Board)
         ursina.destroy(self.Back)
+        ursina.destroy(self.StatusText)
 
         MENU_GLOBAL = Menu(False)
 
