@@ -1,6 +1,8 @@
 import socket
 import sys
 import pickle
+import threading
+from queue import Queue
 
 
 class VerifyWin:
@@ -78,8 +80,11 @@ class LocalPlayer:
     def __UserInput(self):
         choice = ''
         while choice not in self.ValidCoordinates:
-            choice = input('Please Enter A Coordinate : ')
-
+            choice = self.inputQueue.get()
+            if choice not in self.ValidCoordinates:
+                self.backend_Queue = Queue.put('NOT VALID')
+        
+        self.backend_Queue = Queue.put('VALID')
         return int(choice[0]), int(choice[1])
 
 
