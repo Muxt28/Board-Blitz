@@ -48,7 +48,7 @@ class VerifyWin:
 
 class LocalPlayer:
     def __init__(self, inputQueue):
-        self.inputQueue = inputQueue
+        self.inputQueue = inputQueue 
         self.running = True
         self.BoxesFilled = 0
 
