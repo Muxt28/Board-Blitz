@@ -117,7 +117,8 @@ class ThreeXThreeBoardScene():
             return 1;
         self.hasGameStarted = True
         # locked session
-        newGameInstance = Thread(target=Library.LocalPlayer)
+        newGameInstance = Thread(target=Library.LocalPlayer, args=(self.inputQueue))
+        self.inputQueue = Queue(maxsize=0)
         #newGameInstance.__UserInput = __UserInputFrontend
         newGameInstance.start()
         print("started game thread from GameManager")
@@ -132,4 +133,5 @@ class ThreeXThreeBoardScene():
         MENU_GLOBAL = Menu(False)
 
     def onUpdate(self):
+        
         pass

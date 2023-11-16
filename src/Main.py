@@ -20,12 +20,12 @@ from Frontend import (
 app = ursina.Ursina (
     title = "Board Blitz",
     borderless = False,
-    icon = ".\\Assets\\Logo.ico"
+    icon = ".\\Assets\\Logo.ico",
 )
 
 window.fullscreen = False
 window.exit_button.visible = False
-window.fps_counter.enabled = True
+window.fps_counter.enabled = False
 window.forced_aspect_ratio = (16/9)
 
 ursina.Sky()

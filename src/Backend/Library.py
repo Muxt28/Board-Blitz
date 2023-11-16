@@ -45,7 +45,8 @@ class VerifyWin:
     
 
 class LocalPlayer:
-    def __init__(self):
+    def __init__(self, q):
+        self.inputQueue = q
         self.running = True
         self.BoxesFilled = 0
 
@@ -54,7 +55,7 @@ class LocalPlayer:
         self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
         self.board = [['-'for _ in range(3)] for _ in range(3)]
         self.GamePlay()
-        
+    
     def GamePlay(self):
         while self.running and self.BoxesFilled < 9:
             if self.BoxesFilled % 2 == 0:
