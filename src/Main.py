@@ -20,7 +20,7 @@ from Frontend import (
 app = ursina.Ursina (
     title = "Board Blitz",
     borderless = False,
-    icon = ".\\Assets\\Logo.ico",
+    icon = r".\Assets\Logo.ico",
 )
 
 window.fullscreen = False
