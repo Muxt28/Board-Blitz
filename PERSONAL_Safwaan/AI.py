@@ -1,37 +1,31 @@
 # UH DONT TOUCH THIS YET IM WORKING ON IT
+from random import randint
+
 
 class AI:
-    def __init__(self, playerclick):
-        self.playerclick = playerclick
+    def __init__(self):
+        self.board = [['-' for columns in range(3)] for rows in range(3)]
+        self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
+        self.startPos = ['00', '02', '11', '20', '22']
 
-    def setBoard():
-        global board = [
-            ["N","N","N"],
-            ["N","N","N"],
-            ["N","N","N"]
-        ]
+        self.player_choose = randint(0,1)
 
-        # global num_rows = len(board)
-        # global num_cols = len(board[0])
-
-    def selectRandomPos():
-        from random import randint
-
-        coords_list = ["00","01","02","10","11","12","20","21","22"]
-        # random_row = randint(0, num_rows - 1)
-        # random_col = randint(0, num_cols - 1)
-
-        # return board[random_row][random_col]
+    def __selectStartPos(self):
+        return self.startPos[randint(0, 4)]
         
-    def startAI():
-        selectRandomPos()
+    def startAI(self):
+        x,y = self.__selectRandomPos().split(' ')
+        self.board[x][y] 
+        
 
     def choosePlayer():
-        from random import randint
-        player_choose = randint(0,1)
-
-        if player_choose == 0:
-            #AI starts - link the startAI function here
-        if player_choose == 1:
+        
+        if self.player_choose == 0:
+            self.startAI()
+        else:
             #Player starts
+
+
+
+AI.choosePlayer(AI())
           
