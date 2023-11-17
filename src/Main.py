@@ -20,27 +20,22 @@ from Frontend import (
 app = ursina.Ursina (
     title = "Board Blitz",
     borderless = False,
-    icon = ".\\Assets\\Logo.ico"
+    icon = r".\Assets\Logo.ico",
 )
 
-# Optimise input
 window.fullscreen = False
 window.exit_button.visible = False
-window.fps_counter.enabled = True
+window.fps_counter.enabled = False
 window.forced_aspect_ratio = (16/9)
 
 ursina.Sky()
-##CameraPosition = (0,20,-25)
-##CameraRotation = (40,0,0)
-
 ursina.camera.orthographic = False
 ursina.camera.fov = 90
 ursina.camera.position = (0,0,0)
 ursina.camera.rotation = (0,0,0)
 
-#
-DEBUG_MODE = False
-DELAY_GL = 4 if (DEBUG_MODE!=True) else 0 #if DEBUG_MODE else 0
+DEBUG_MODE = True
+DELAY_GL = 4 if (DEBUG_MODE!=True) else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
 ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)

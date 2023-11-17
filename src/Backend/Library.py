@@ -1,6 +1,8 @@
 import socket
 import sys
 import pickle
+import threading
+from queue import Queue
 
 
 class VerifyWin:
@@ -45,8 +47,8 @@ class VerifyWin:
     
 
 class LocalPlayer:
-    def __init__(self):
-
+    def __init__(self, inputQueue):
+        self.inputQueue = inputQueue 
         self.running = True
         self.BoxesFilled = 0
 
@@ -54,6 +56,7 @@ class LocalPlayer:
 
         self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
         self.board = [['-'for _ in range(3)] for _ in range(3)]
+        self.GamePlay()
     
     def GamePlay(self):
         while self.running and self.BoxesFilled < 9:
@@ -77,8 +80,11 @@ class LocalPlayer:
     def __UserInput(self):
         choice = ''
         while choice not in self.ValidCoordinates:
-            choice = input('Please Enter A Coordinate : ')
-
+            choice = self.inputQueue.get()
+            if choice not in self.ValidCoordinates:
+                self.backend_Queue = Queue.put('NOT VALID')
+        
+        self.backend_Queue = Queue.put('VALID')
         return int(choice[0]), int(choice[1])
 
 
@@ -125,4 +131,4 @@ class Multiplayer:
                     if Msg != '':
                         print(f'{Msg}')
 
-Multiplayer.Game_Manager(Multiplayer())
+#Multiplayer.Game_Manager(Multiplayer())
