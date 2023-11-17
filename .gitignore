@@ -8,8 +8,8 @@ models_compressed/
 PERSONAL_UZI/Assets/ 
 # useless stuff
 
-# #Muqsits ignores:
-# PERSONAL_Muqsit/
+#Muqsits ignores:
+PERSONAL_Muqsit/
 
 # #Safwaans Ignores
 # PERSONAL_Safwaan/
