@@ -16,16 +16,21 @@ class AI:
     def startAI(self):
         x,y = self.__selectRandomPos().split(' ')
         self.board[x][y] 
-        
-
+    #These move will only be called when the player starts first and takes the middle - its that V shape
+    def move10():
+        self.board[1][0] = "O"
+    def move21():
+        self.board[2][1] = "O"
     def choosePlayer():
-        
-        if self.player_choose == 0:
+         if self.player_choose == 0:
             self.startAI()
         else:
-            #Player starts
+            #player starts
+
+    def mainSequence():
+        
+            
 
 
 
 AI.choosePlayer(AI())
-          
