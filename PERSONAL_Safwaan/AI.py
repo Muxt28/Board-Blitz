@@ -1,4 +1,3 @@
-# UH DONT TOUCH THIS YET IM WORKING ON IT
 from random import randint
 
 
@@ -16,18 +15,25 @@ class AI:
     def startAI(self):
         x,y = self.__selectRandomPos().split(' ')
         self.board[x][y] 
-    #These move will only be called when the player starts first and takes the middle - its that V shape
-    def move10():
+    #These moves will only be called when the player starts first and takes the middle - its that V shape
+    def move10(self):
         self.board[1][0] = "O"
-    def move21():
+    def move21(self):
         self.board[2][1] = "O"
-    def choosePlayer():
-         if self.player_choose == 0:
+    def move12(self):
+        self.board[1][2] = "O"
+
+    def choosePlayer(self):
+        if self.player_choose == 0:
             self.startAI()
         else:
             #player starts
 
-    def mainSequence():
+    def playerStart(self):
+        if #p
+    def aiStart(self):
+
+
         
             
 

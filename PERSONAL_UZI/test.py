@@ -1,16 +1,8 @@
-from threading import Thread
-from queue import Queue
-import time
+from multiprocessing import pool
 
-def worker(q):
-    while True:
-        thing = q.get()
-        print(thing)
-    pass    
 
-q = Queue(maxsize=0)
+def hello():
+    return 'Hello'
 
-thingy = Thread(target=worker, args=(q,))
-thingy.start()
-
-q.put("yo")
+p = pool(processes=2)
+p.apply_async(func=hello)
