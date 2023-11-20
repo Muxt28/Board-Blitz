@@ -122,7 +122,25 @@ class ThreeXThreeBoardScene():
         #newGameInstance.__UserInput = __UserInputFrontend
         newGameInstance.start()
         print("started game thread from GameManager")
-        
+    
+    def.getPosFromCoords(gameCoord):
+
+        pass
+
+    def placeX(coords):
+        newX = ursina.Entity(Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
+        newX.Position = self.getPosFromCoords(coords)
+        # position newX with coords
+        # handle 3d stuff here... and THEN 
+
+        # do ur backend ting here
+    
+    def placeO():
+        # handle 3d stuff here.. and then
+
+        # backend
+
+
     def destroy(self):
         global MENU_GLOBAL
         STATES["In3x3Single"] = False
