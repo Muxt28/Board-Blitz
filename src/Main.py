@@ -41,8 +41,9 @@ ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-#GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
+#GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
+
 
 def update():
     if GameManager.STATES["IN_MENU"]:
@@ -51,7 +52,7 @@ def update():
             camera.position = (0,200,-230)
             camera.rotation = (45,0,0)
             camera.look_at = ursina.Vec3(0,0,0)
-            GameManager.BOARD_SCENE_GLOBAL.onUpdate()
+            #GameManager.BOARD_SCENE_GLOBAL.onUpdate(mouse.world_point)
 
 def input(key):
     if InputHandler.GetInputState("TrackingInput"):
@@ -66,10 +67,14 @@ def input(key):
     if InputHandler.GetInputState("TrackingMouse"):
         if GameManager.STATES["In3x3Single"]:
             InputHandler.HandleMouse(key)
-            if key=="right mouse down":
-                mouse.locked = True
-            if key == "right mouse up":
-                mouse.locked = False
+            ##if key=="right mouse down":
+            #    mouse.locked = True
+            #if key == "right mouse up":
+            #    mouse.locked = False
+            if key=="left mouse down":
+                 #get mouse coords
+                 GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point)
+                 pass
                 
 #UI.MainMenu()
 app.run()

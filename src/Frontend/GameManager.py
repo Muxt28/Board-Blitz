@@ -94,7 +94,7 @@ class Menu():
 class ThreeXThreeBoardScene():
     def __init__(self) -> None:
         STATES["In3x3Single"] = True
-        self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10)
+        self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), collider = "box", shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10, onclick = self.onBoardClick)
         self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
@@ -107,6 +107,8 @@ class ThreeXThreeBoardScene():
             )
         self.startGame()
         #self.Text = ursina.Text("The game is starting soon...")
+    def onBoardClick(self):
+        print("clicked board..")
 
     def setStatusText(self, text):
         self.StatusText.text = text
@@ -117,28 +119,71 @@ class ThreeXThreeBoardScene():
             return 1;
         self.hasGameStarted = True
         # locked session
-        newGameInstance = Thread(target=Library.LocalPlayer, args=(self.inputQueue))
         self.inputQueue = Queue(maxsize=0)
+        newGameInstance = Thread(target=Library.LocalPlayer, args=(self.inputQueue))
+        
         #newGameInstance.__UserInput = __UserInputFrontend
         newGameInstance.start()
         print("started game thread from GameManager")
+        self.CurrentTurn = "X"
     
-    def.getPosFromCoords(gameCoord):
+    def getPosFromCoords(self, gameCoord):
+        # gives in mouse coords, returns board coords
+        print(gameCoord)
+        XROW = 0;
+        YROW = 0
+        if gameCoord.X <= -55:
+            XROW = 0
+        elif gameCoord.X > -55 and gameCoord.X <= 50:
+            XROW = 1
+        elif gameCoord.X > 50:
+            XROW = 2
+        if gameCoord.Z <= -55:
+            YROW = 2
+        elif gameCoord.Z > -55 and gameCoord.Z <= 50:
+            YROW = 1
+        elif gameCoord.Z > 50:
+            YROW = 0
+        gameCoords = str(YROW) + str(XROW)
+        coordDict = {
+            "00" : (-107,7,107),
+            "01" : (0,7,107),
+            "02" : (107,7,107),
+            "10" : (-107,7,0),
+            "11" : (0,7,0),
+            "12" : (107,7,0),
+            "20" : (-107,7,-107),
+            "21" : (0,7,-107),
+            "22" : (107,7,-107),
+        }
+        return coordDict[gameCoords]
 
-        pass
-
-    def placeX(coords):
-        newX = ursina.Entity(Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
-        newX.Position = self.getPosFromCoords(coords)
+    def placeX(self, coords):
+        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
+        newX.position = self.getPosFromCoords(coords)    
         # position newX with coords
         # handle 3d stuff here... and THEN 
 
         # do ur backend ting here
     
-    def placeO():
+    def placeO(self, coords):
         # handle 3d stuff here.. and then
-
+        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10)
+        newO.position = self.getPosFromCoords(coords)    
+        pass
         # backend
+
+    def handleMouseClick(self, pos):
+        print("left mouse  button clicked!")
+        if pos != None:
+            if self.CurrentTurn == "X":
+                self.placeX(pos)
+                # place X
+                self.CurrentTurn = "O"
+            else:
+                # place O
+                self.placeO(pos)
+                self.CurrentTurn = "X"
 
 
     def destroy(self):
@@ -147,9 +192,9 @@ class ThreeXThreeBoardScene():
         ursina.destroy(self.Board)
         ursina.destroy(self.Back)
         ursina.destroy(self.StatusText)
-
         MENU_GLOBAL = Menu(False)
 
-    def onUpdate(self):
-        
+    def onUpdate(self, mouseCoords):
+        if mouseCoords!=None:
+            print(mouseCoords)
         pass
