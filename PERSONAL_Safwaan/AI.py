@@ -12,11 +12,7 @@ class AI:
 
     def __selectStartPos(self):
         return self.startPos[randint(0, 4)]
-        
-    def startAI(self):
-        x,y = self.__selectRandomPos().split(' ')
-        self.board[x][y] 
-    #These moves will only be called when the player starts first and takes the middle - its that V shape
+        #These moves will only be called when the player starts first and takes the middle - its that V shape
     def move10(self):
         self.board[1][0] = "O"
     def move21(self):
@@ -25,32 +21,50 @@ class AI:
         self.board[1][2] = "O"
     
 
-    #These occur when
+    #These occur when ai starts first - the L shape
     def move00(self):
         self.board[self.startPos[0[0]]][self.startPos[0[1]]] = "X"
     def move01(self):
         move = self.startPos[1]
         self.board[move[0]][move[1]] = "X"
+    def move02(self):
+        move = self.startPos[2]
+        self.board[move[0]][move[1]] = "X"
+    def move20(self):
+        move = self.startPos[6]
+        self.board[move[0]][move[1]] = "X"
+    def move21(self):
+        move = self.startPos[7]
+        self.board[move[0]][move[1]] = "X"
+    def move21(self):
+        move = self.startPos[8]
+        self.board[move[0]][move[1]] = "X"
+    
+        
+    def startAI(self):
+        x,y = self.__selectRandomPos().split(' ')
+        self.board[x][y] 
+        
+    def playerStart(self):
+        self.move20()
+        #after opponent moves
+        self.move02()
+        #after next move
+        self.move00()
+        #next
+        self.move01()
+        if #victory != "yes":
+            self.move20()  
+    
 
     def choosePlayer(self):
         if self.player_choose == 0:
             self.startAI()
         else:
-            #player starts
-            pass
+            self.playerStart()
 
-    def playerStart(self):
-        choose = randint(0,1)
-        self.move00()
-        #after opponent moves
-        self.move
-
-
-    def aiStart(self):
-
-
-        
-            
+    
+      
 
 
 
