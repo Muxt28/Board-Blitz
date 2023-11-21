@@ -142,47 +142,59 @@ class AI_Manager:
     # check Horizantolly :
         for rows in range(3):
             if [self.board[rows][0], self.board[rows][1]] == [self.player_Counter, self.player_Counter]:
-                self.board[rows][2] = self.Ai_Counter
-                return 'Attack'             
+                if self.board[rows][2] == '-':
+                    self.board[rows][2] = self.Ai_Counter
+                    return self.board            
             if [self.board[rows][1], self.board[rows][2]] == [self.player_Counter, self.player_Counter]:
-                self.board[rows][0] = self.Ai_Counter
-                return 'Attack'                  
+                if self.board[rows][0] == '-':
+                    self.board[rows][0] = self.Ai_Counter
+                    return self.board                  
             if [self.board[rows][0], self.board[rows][2]] == [self.player_Counter, self.player_Counter]:
-                self.board[rows][1] = self.Ai_Counter
-                return 'Attack'
+                if self.board[rows][1] == '-':
+                    self.board[rows][1] = self.Ai_Counter
+                    return self.board
             
         # Check Vertically : 
         for columns in range(3):
             if [self.board[0][columns], self.board[1][columns]] == [self.player_Counter, self.player_Counter]:
-                self.board[2][columns] = self.Ai_Counter
-                return 'Attack'                
+                if self.board[2][columns] == '-':
+                    self.board[2][columns] = self.Ai_Counter
+                    return self.board                
             if [self.board[1][columns], self.board[2][columns]] == [self.player_Counter, self.player_Counter]:
-                self.board[0][columns] = self.Ai_Counter
-                return 'Attack'                 
+                if self.board[0][columns] == '-':
+                    self.board[0][columns] = self.Ai_Counter
+                    return self.board                 
             if [self.board[0][columns], self.board[2][columns]] == [self.player_Counter, self.player_Counter]:
-                self.board[1][columns] = self.Ai_Counter
-                return 'Attack'  
+                if self.board[1][columns] == '-':
+                    self.board[1][columns] = self.Ai_Counter
+                    return self.board  
 
         # Check Top Left -> Bottom Right : 
         if [self.board[0][0], self.board[1][1]] == [self.player_Counter, self.player_Counter]:
-            self.board[2][2] = self.Ai_Counter
-            return 'Attack'    
+            if self.board[2][2] == '-':
+                self.board[2][2] = self.Ai_Counter
+                return self.board    
         if [self.board[1][1], self.board[2][2]] == [self.player_Counter, self.player_Counter]:
-            self.board[0][0] = self.Ai_Counter
-            return 'Attack'     
+            if self.board[0][0] == '-':
+                self.board[0][0] = self.Ai_Counter
+                return self.board     
         if [self.board[0][0], self.board[2][2]] == [self.player_Counter, self.player_Counter]:
-            self.board[1][1] = self.Ai_Counter
-            return 'Attack'     
+            if self.board[1][1] == '-':
+                self.board[1][1] = self.Ai_Counter
+                return self.board     
         # Check Top Right -> Bottom Left : 
         if [self.board[0][2], self.board[1][1]] == [self.player_Counter, self.player_Counter]:
-            self.board[2][0] = self.Ai_Counter
-            return 'Attack'     
+            if self.board[2][0] == '-':
+                self.board[2][0] = self.Ai_Counter
+                return self.board     
         if [self.board[1][1], self.board[2][0]] == [self.player_Counter, self.player_Counter]:
-            self.board[0][2] = self.Ai_Counter
-            return 'Attack'     
+            if self.board[0][2] == '-':
+                self.board[0][2] = self.Ai_Counter
+                return self.board     
         if [self.board[0][2], self.board[2][0]] == [self.player_Counter, self.player_Counter]:
-            self.board[1][1] = self.Ai_Counter
-            return 'Attack'     
+            if self.board[1][1] == '-':
+                self.board[1][1] = self.Ai_Counter
+                return self.board     
     
         return 'PLAY'
 
