@@ -52,29 +52,16 @@ def update():
             camera.position = (0,200,-230)
             camera.rotation = (45,0,0)
             camera.look_at = ursina.Vec3(0,0,0)
-            #GameManager.BOARD_SCENE_GLOBAL.onUpdate(mouse.world_point)
 
 def input(key):
     if InputHandler.GetInputState("TrackingInput"):
-        #InputHandler.HandleKeys(key)
-        #if key=="p": ## DEBUG
-        #    GameManager.MENU_GLOBAL.destroy()
-        #if key=="m":
-        #    GameManager.MENU_GLOBAL = GameManager.Menu(False)
-        # 
         pass
 
     if InputHandler.GetInputState("TrackingMouse"):
         if GameManager.STATES["In3x3Single"]:
             InputHandler.HandleMouse(key)
-            ##if key=="right mouse down":
-            #    mouse.locked = True
-            #if key == "right mouse up":
-            #    mouse.locked = False
             if key=="left mouse down":
-                 #get mouse coords
                  GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point)
                  pass
                 
-#UI.MainMenu()
 app.run()
