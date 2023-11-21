@@ -209,6 +209,17 @@ class ThreeXThreeBoardScene():
 class MultiPlayer3x3Scene:
     def __init__(self, gameType="In3x3Multiplayer") -> None:
         self.currentGameType = gameType
+        self.gradient = ursina.Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=ursina.color.hsv(240,.6,.1,.75))
+        self.code_field = ursina.InputField(y=-.12, limit_content_to='0123456789', default_value='1024', active=True)
+        self.code_field.text = ''
+        self.join_button = ursina.Button(text='Join', scale=.1, color=ursina.color.cyan.tint(-.4), y=-.26, on_click=self.onCodeEntered).fit_to_text()
+
+    def onCodeEntered(self):
+        self.userInputtedCode = self.code_field.text
+        ursina.destroy(self.gradient)
+        ursina.destroy(self.code_field)
+        ursina.destroy(self.join_button)
+        print(f"user inputted code was {self.userInputtedCode}")
         STATES[self.currentGameType] = True
         self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), collider = "box", shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10, onclick = self.onBoardClick)
         self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
@@ -222,6 +233,7 @@ class MultiPlayer3x3Scene:
             scale = 1.6
             )
         self.startGame()
+
         #self.Text = ursina.Text("The game is starting soon...")
     def onBoardClick(self):
         print("clicked board..")
