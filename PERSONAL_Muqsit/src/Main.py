@@ -57,18 +57,23 @@ def input(key):
         if GameManager.STATES["In3x3Single"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
-                values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
-                
-                if values == 'NOT VALID':
-                     return
-                
-                BoxesFilled += 1
-                # print(f'Boxes FIlled : {BoxesFilled}')
-                if BoxesFilled == 9:
-                     print('*[ Draw ]*')
-                     sys.exit()
-                
-                if values != None:
-                    print(values)
-                    sys.exit()
+                print(mouse.world_point)
+                if mouse.world_point==None:
+                     # player didnt touch the screen, ignore
+                    return
+                else:
+                    values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                    
+                    if values == 'NOT VALID':
+                        return
+                    
+                    BoxesFilled += 1
+                    # print(f'Boxes FIlled : {BoxesFilled}')
+                    if BoxesFilled == 9:
+                        print('*[ Draw ]*')
+                        sys.exit()
+                    
+                    if values != None:
+                        print(values)
+                        sys.exit()
 app.run()
