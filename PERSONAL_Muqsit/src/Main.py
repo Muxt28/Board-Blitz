@@ -1,15 +1,9 @@
-# Main File for Board Blitz
-
-# Frontend Written by Uzair
-# Backend written by Muqsit
-# AI written by Safwaan
-#############################
+import sys
 import ursina
 import ursina.shaders as shaders
 import ursina.mouse as mouse
 import ursina.camera as camera 
 import ursina.window as window
-import math
 from Frontend import (
     GameManager,
     InputHandler,
@@ -41,9 +35,10 @@ ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-#GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+# GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
 GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
-
+BoxesFilled = 0
+board = [['-'for _ in range(3)] for _ in range(3)]
 
 def update():
     if GameManager.STATES["IN_MENU"]:
@@ -54,7 +49,7 @@ def update():
             camera.look_at = ursina.Vec3(0,0,0)
 
 def input(key):
-    BoxesFilled = 0
+    global BoxesFilled, board
     if InputHandler.GetInputState("TrackingInput"):
         pass
 
@@ -62,9 +57,18 @@ def input(key):
         if GameManager.STATES["In3x3Single"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
-                 values = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled)
-                 BoxesFilled += 1
+                values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                
+                if values == 'NOT VALID':
+                     return
+                
+                BoxesFilled += 1
+                # print(f'Boxes FIlled : {BoxesFilled}')
+                if BoxesFilled == 9:
+                     print('*[ Draw ]*')
+                     sys.exit()
                 
                 if values != None:
                     print(values)
+                    sys.exit()
 app.run()

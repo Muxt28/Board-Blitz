@@ -5,7 +5,7 @@ import ursina.camera as camera
 import ursina.window as window
 
 import sys
-from multiprocessing import ThreadPool
+from multiprocessing.pool import ThreadPool
 
 sys.path.append("..")
 from Backend import Library
@@ -20,7 +20,6 @@ STATES = {
 MENU_GLOBAL = False
 BOARD_SCENE_GLOBAL = False
 
-#from Main import Menu as MENUGLOBAL
 
 class Menu():
     def __init__(self, firstTime=True) -> None:
@@ -47,8 +46,6 @@ class Menu():
         }, scale = (1,1), position = (-.8,0.1), enabled=False, button_height=1.5)
 
     def singlePlayerClick(self):
-        #ThreeXThreeBoardScene()
-        #self.__del__()
         global MENU_GLOBAL
         global BOARD_SCENE_GLOBAL
         BOARD_SCENE_GLOBAL = ThreeXThreeBoardScene()
@@ -59,6 +56,11 @@ class Menu():
         text = ursina.Text("Multiplayer is currently not supported!", color=ursina.color.red)
         ursina.invoke(ursina.destroy, text, delay=2)
         pass
+        # global MENU_GLOBAL
+        # global BOARD_SCENE_GLOBAL
+        # BOARD_SCENE_GLOBAL = ThreeXThreeBoardScene()
+        # MENU_GLOBAL.destroy()
+        # pass
 
     def goBack(self):
         self.PlayButton.visible = True
@@ -72,7 +74,6 @@ class Menu():
 
     def onUpdate(self):
             x, y, z = mouse.position
-            #print(ROOTCAMERAPOS)
             camera.position = self.ROOTCAMERAPOS + (-x*.1,y*.1,0)
             camera.rotation = self.ROOTCAMERAROT + (
                 ((((y*150)-window.size.y/2)/window.size.y)*-self.maxTilt),
@@ -89,7 +90,8 @@ class Menu():
         ursina.destroy(self.PlayButton)
         ursina.destroy(self.List)
         MENU_GLOBAL = False
-        #ursina.destroy(self.Trees)
+
+
 class ThreeXThreeBoardScene():
     def __init__(self) -> None:
         STATES["In3x3Single"] = True
@@ -98,36 +100,28 @@ class ThreeXThreeBoardScene():
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
         self.hasGameStarted=False
-        self.StatusText = ursina.Text(
-            text="The game will be starting soon...",
-            position = ursina.window.top,
-            origin = (0,1),
-            scale = 1.6
-            )
-
-        self.BoxesFilled = 0
+        # self.StatusText = ursina.Text(
+        #     text="The game will be starting soon...",
+        #     position = ursina.window.top,
+        #     origin = (0,1),
+        #     scale = 1.6
+        #     )
         
         self.startGame()
-        #self.Text = ursina.Text("The game is starting soon...")
     def onBoardClick(self):
-        print("clicked board..")
+        pass
 
     def setStatusText(self, text):
         self.StatusText.text = text
     
     def startGame(self):
         if self.hasGameStarted:
-            print("The game instance has already started!")
             return 1
         self.hasGameStarted = True
-        
-        print("started game thread from GameManager")
-        self.CurrentTurn = "X"
+        # self.CurrentTurn = "X"
     
     def getPosFromCoords(self, gameCoord):
-        # gives in mouse coords, returns board coords
-        print(gameCoord)
-        XROW = 0;
+        XROW = 0
         YROW = 0
         if gameCoord.X <= -55:
             XROW = 0
@@ -158,28 +152,39 @@ class ThreeXThreeBoardScene():
     def placeX(self, coords):
         newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
         newX.position = self.getPosFromCoords(coords)    
-        # position newX with coords
-        # handle 3d stuff here... and THEN 
-
-        # do ur backend ting here
+        
     
     def placeO(self, coords):
-        # handle 3d stuff here.. and then
         newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10)
         newO.position = self.getPosFromCoords(coords)    
         pass
-        # backend
 
-    def handleMouseClick(self, pos, BoxesFilled):
-        print("left mouse  button clicked!")
-        
+    def handleMouseClick(self, pos, BoxesFilled, board):        
         thread = ThreadPool(processes=1)
-        threadReturn = thread.apply_async(Library.LocalPlayer.GamePlay, (Library.LocalPlayer(self.BoxesFilled, ),))
-        win, currentPlayer = threadReturn.get()
-        print(win, currentPlayer)
+        coordinates = {
+            "00" : (-107,7,107),
+            "01" : (0,7,107),
+            "02" : (107,7,107),
+            "10" : (-107,7,0),
+            "11" : (0,7,0),
+            "12" : (107,7,0),
+            "20" : (-107,7,-107),
+            "21" : (0,7,-107),
+            "22" : (107,7,-107),
+        }
 
-        # if valid != 'VALID':
-        #     return 'NOT VALID'
+        key_list = list(coordinates.keys())
+        val_list = list(coordinates.values())
+
+        position = val_list.index(self.getPosFromCoords(pos))
+
+        xy = key_list[position]
+        x, y = int(xy[0]), int(xy[1])
+        if board[x][y] == '-':
+            threadReturn = thread.apply_async(Library.LocalPlayer.GamePlay, (Library.LocalPlayer(BoxesFilled, key_list[position], board),))
+            win, board = threadReturn.get()
+        else:
+            return 'NOT VALID', board
 
         if pos != None:
             if BoxesFilled % 2 == 0:
@@ -188,7 +193,9 @@ class ThreeXThreeBoardScene():
                 self.placeO(pos)
 
         if win  == '*[ Player 1 has Won ]*' or win == '*[ Player 2 has Won ]*':
-            return win
+            return win, board
+        else:
+            return None, board
 
 
     def destroy(self):
@@ -196,10 +203,12 @@ class ThreeXThreeBoardScene():
         STATES["In3x3Single"] = False
         ursina.destroy(self.Board)
         ursina.destroy(self.Back)
-        ursina.destroy(self.StatusText)
+        try:
+            ursina.destroy(self.StatusText)
+        except AttributeError:
+            pass
         MENU_GLOBAL = Menu(False)
 
     def onUpdate(self, mouseCoords):
         if mouseCoords!=None:
-            print(mouseCoords)
-        pass
+            pass

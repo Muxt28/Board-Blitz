@@ -5,43 +5,35 @@ import threading
 from queue import Queue
 
 
-class VerifyWin:
-    def __init__(self, board):
-        self.board = board
-
-    def returnBoard(self):
-        # for rows in self.board:
-        #         print(f"{' '.join(rows)}")
-        self.__VerifyWin()
-    
-    def __VerifyWin(self): 
+class VerifyWin:    
+    def Verify(board): 
         for rows in range(3):
-            if self.board[rows] == ['X','X','X']:
+            if board[rows] == ['X','X','X']:
                 return '*[ Player 1 has Won ]*'
-            elif self.board[rows] == ['O','O','O']:
+            elif board[rows] == ['O','O','O']:
                 return '*[ Player 2 has Won ]*'
         # Check Vertically :
         for columns in range(3):
-            score = [self.board[0][columns], self.board[1][columns], self.board[2][columns]]
+            score = [board[0][columns], board[1][columns], board[2][columns]]
             if score == ['X','X','X']:
                 return '*[ Player 1 has Won ]*'
             elif score == ['O','O','O']:
                 return '*[ Player 2 has Won ]*'
         # Check Diagonally :
-        if [self.board[0][0], self.board[1][1], self.board[2][2]] == ['X','X','X']:
+        if [board[0][0], board[1][1], board[2][2]] == ['X','X','X']:
             return '*[ Player 1 has Won ]*'
-        elif [self.board[0][0], self.board[1][1], self.board[2][2]] == ['O','O','O']:
+        elif [board[0][0], board[1][1], board[2][2]] == ['O','O','O']:
             return '*[ Player 2 has Won ]*'
-        elif [self.board[0][2], self.board[1][1], self.board[2][0]] == ['X','X','X']:
+        elif [board[0][2], board[1][1], board[2][0]] == ['X','X','X']:
             return '*[ Player 1 has Won ]*'
-        elif [self.board[0][2], self.board[1][1], self.board[2][0]] == ['O','O','O']:
+        elif [board[0][2], board[1][1], board[2][0]] == ['O','O','O']:
             return '*[ Player 2 has Won ]*'
 
         return 'NO WIN'
     
 
 class LocalPlayer:
-    def __init__(self, boxesFilled, coords):
+    def __init__(self, boxesFilled, coords, board):
         self.running = True
         self.BoxesFilled = boxesFilled
 
@@ -49,42 +41,28 @@ class LocalPlayer:
         self.currentPlayer = ''
 
         self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
-        self.board = [['-'for _ in range(3)] for _ in range(3)]
+        self.board = board
         self.GamePlay()
     
     def GamePlay(self):
         while self.running and self.BoxesFilled < 9:
+            # print(self.BoxesFilled)
             if self.BoxesFilled % 2 == 0:
-                print(f'\n*[ Player 1 Turn ]*')
                 self.currentPlayer = 'X'
             else:
-                print(f'\n*[ Player 2 Turn ]*')
                 self.currentPlayer = 'O'
 
-            return VerifyWin.returnBoard(VerifyWin(self.Update_board())), self.currentPlayer
+            win = VerifyWin.Verify(self.Update_board())
+            return win, self.board
             
-
     def Update_board(self):
-        
-        self.board[x][y] = self.currentPlayer
-
+        self.board[self.x][self.y] = self.currentPlayer
         return self.board
-
-    # def __UserInput(self):
-    #     choice = ''
-    #     while choice not in self.ValidCoordinates:
-    #         choice = self.inputQueue.get()
-    #         if choice not in self.ValidCoordinates:
-    #             self.backend_Queue = Queue.put('NOT VALID')
-        
-    #     self.backend_Queue = Queue.put('VALID')
-    #     return int(choice[0]), int(choice[1])
 
 
 class Multiplayer:
     def __init__(self):
         self.GameSocket = socket.socket()
-        
         self.running = True
 
     def __ContactServer(self):
@@ -106,7 +84,7 @@ class Multiplayer:
 
         self.playerNumber = self.GameSocket.recv(1024).decode()
 
-    def Game_Manager(self):
+    def Game_Manager(self, connected):
         self.__ContactServer()
 
         while self.running:
