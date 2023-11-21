@@ -70,10 +70,14 @@ def input(key):
                     BoxesFilled += 1
                     # print(f'Boxes FIlled : {BoxesFilled}')
                     if BoxesFilled == 9:
+                        global app
+                        UserInterface.showEndScreen("DRAW")
                         print('*[ Draw ]*')
-                        sys.exit()
+                        #sys.exit()
+                        ursina.invoke(sys.exit,delay=5)
                     
                     if values != None:
                         print(values)
-                        sys.exit()
+                        ursina.invoke(sys.exit,delay=5)
+                        
 app.run()

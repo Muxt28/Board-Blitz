@@ -22,6 +22,20 @@ def ShowLoadingSplash():
     b.default_resolution = 1080 * b.size
     return BlackScreen
 
+def showEndScreen(TYPE):
+    if TYPE=="DRAW":
+            BlackScreen = ursina.Entity(
+        parent = ursina.camera.ui,
+        model = 'cube',
+        scale = (2,2),                                           
+        origin = (0,0),                                         
+        position = (0,0),                                                                                                             
+        color = ursina.color.black 
+    )
+    b = ursina.Text(text='You had a Draw!', color=ursina.color.white, size=10,origin = (0,.5), parent = BlackScreen)
+    b.default_resolution = 1080 * b.size
+
+
 def destroyEntity(ent):
     ursina.destroy(ent)
 
