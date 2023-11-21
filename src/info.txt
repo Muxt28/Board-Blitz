@@ -1,2 +1,0 @@
-from the frontend, whenever a player clicks on a tile/grid
-we send taht info into the queue, and the backend recieves taht and proccess
