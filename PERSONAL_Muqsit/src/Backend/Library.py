@@ -10,52 +10,42 @@ class VerifyWin:
         self.board = board
 
     def returnBoard(self):
-        for rows in self.board:
-                print(f"{' '.join(rows)}")
+        # for rows in self.board:
+        #         print(f"{' '.join(rows)}")
         self.__VerifyWin()
     
     def __VerifyWin(self): 
-
-        win = False
-
         for rows in range(3):
             if self.board[rows] == ['X','X','X']:
-                print('*[ Player 1 has Won ]*')
-                win = 1
+                return '*[ Player 1 has Won ]*'
             elif self.board[rows] == ['O','O','O']:
-                print('*[ Player 2 has Won ]*')
-                win = 2
+                return '*[ Player 2 has Won ]*'
         # Check Vertically :
         for columns in range(3):
             score = [self.board[0][columns], self.board[1][columns], self.board[2][columns]]
             if score == ['X','X','X']:
-                print('*[ Player 1 has Won ]*')
-                win = 1
+                return '*[ Player 1 has Won ]*'
             elif score == ['O','O','O']:
-                print('*[ Player 2 has Won ]*')
-                win = 2
+                return '*[ Player 2 has Won ]*'
         # Check Diagonally :
         if [self.board[0][0], self.board[1][1], self.board[2][2]] == ['X','X','X']:
-            print('*[ Player 1 has Won ]*')
-            win = 1
+            return '*[ Player 1 has Won ]*'
         elif [self.board[0][0], self.board[1][1], self.board[2][2]] == ['O','O','O']:
-            print('*[ Player 2 has Won ]*')
-            win = 2
+            return '*[ Player 2 has Won ]*'
         elif [self.board[0][2], self.board[1][1], self.board[2][0]] == ['X','X','X']:
-            print('*[ Player 1 has Won ]*')
-            win = 1
+            return '*[ Player 1 has Won ]*'
         elif [self.board[0][2], self.board[1][1], self.board[2][0]] == ['O','O','O']:
-            print('*[ Player 2 has Won ]*')
-            win = 2
+            return '*[ Player 2 has Won ]*'
+
+        return 'NO WIN'
     
-        return win, self.board
 
 class LocalPlayer:
-    def __init__(self):
-        # self.inputQueue = inputQueue 
+    def __init__(self, boxesFilled, coords):
         self.running = True
-        self.BoxesFilled = 0
+        self.BoxesFilled = boxesFilled
 
+        self.x, self.y = int(coords[0]), int(coords[1])
         self.currentPlayer = ''
 
         self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
@@ -71,29 +61,67 @@ class LocalPlayer:
                 print(f'\n*[ Player 2 Turn ]*')
                 self.currentPlayer = 'O'
 
-            Valid = self.Update_board()
-            if Valid != False:
-                VerifyWin.returnBoard(VerifyWin(Valid))
-                self.BoxesFilled += 1
-            else:
-                return 'MOVE NOT VALID'
+            return VerifyWin.returnBoard(VerifyWin(self.Update_board())), self.currentPlayer
+            
 
     def Update_board(self):
-        try:
-            x, y = self.__UserInput()
-        except Exception:
-            return False
+        
         self.board[x][y] = self.currentPlayer
 
         return self.board
 
-    def __UserInput(self):
-        choice = ''
-        while choice not in self.ValidCoordinates:
-            choice = input('Choice : ')
-            if choice not in self.ValidCoordinates:
-                # self.backend_Queue = Queue.put('NOT VALID')
-                return False
+    # def __UserInput(self):
+    #     choice = ''
+    #     while choice not in self.ValidCoordinates:
+    #         choice = self.inputQueue.get()
+    #         if choice not in self.ValidCoordinates:
+    #             self.backend_Queue = Queue.put('NOT VALID')
         
-        # self.backend_Queue = Queue.put('VALID')
-        return int(choice[0]), int(choice[1])
+    #     self.backend_Queue = Queue.put('VALID')
+    #     return int(choice[0]), int(choice[1])
+
+
+class Multiplayer:
+    def __init__(self):
+        self.GameSocket = socket.socket()
+        
+        self.running = True
+
+    def __ContactServer(self):
+        try:
+            self.GameSocket.connect(('35.176.207.55', 5555))
+        except ConnectionRefusedError:
+            self.GameSocket.connect(('35.176.207.55', 5556))
+
+        print(self.GameSocket.recv(1024).decode())
+
+        self.GameSocket.send(input('Enter Code : ').encode())
+        
+        port = int(self.GameSocket.recv(1024).decode())
+        print(f'Port : {port}')
+        self.GameSocket.close()
+
+        self.GameSocket = socket.socket()
+        self.GameSocket.connect(('35.176.207.55', port))
+
+        self.playerNumber = self.GameSocket.recv(1024).decode()
+
+    def Game_Manager(self):
+        self.__ContactServer()
+
+        while self.running:
+            Msg = self.GameSocket.recv(1024)
+            try:
+                board = pickle.loads(Msg)
+                for rows in board:
+                    print(' '.join(rows))
+            except Exception:
+                Msg = Msg.decode()
+                if Msg == '*[ Your Turn ]*' or Msg == '*[ Box Occupied ]*':
+                    self.GameSocket.send(input('Enter Coordinates : ').encode())
+                    print('*[ Sent ]*')
+                else:
+                    if Msg != '':
+                        print(f'{Msg}')
+
+#Multiplayer.Game_Manager(Multiplayer())
