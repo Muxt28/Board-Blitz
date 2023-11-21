@@ -1,0 +1,11 @@
+{
+    "X" : "NewModel_X.obj",
+    "O" : "NewModel_O.obj",
+    "3x3" : "New3x3Board.obj",
+    "5x5" : "New5x5Board.obj",
+    "7x7" : "New7x7Board.obj",
+    "Beach" : "PalmScene\\BeachPart.obj",
+    "Water" : "PalmScene\\Water.obj",
+    "Trees" : "PalmScene\\Trees.obj",
+    "XOModel" : "XOLogo.obj"
+}
