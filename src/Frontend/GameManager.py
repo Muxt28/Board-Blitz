@@ -93,6 +93,8 @@ class Menu():
         MENU_GLOBAL = False
 
 
+class MultiplayeBoardScene():
+    pass
 
 class ThreeXThreeBoardScene():
     def __init__(self) -> None:
