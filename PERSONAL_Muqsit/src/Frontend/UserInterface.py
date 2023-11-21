@@ -23,8 +23,13 @@ def ShowLoadingSplash():
     return BlackScreen
 
 def showEndScreen(TYPE):
-    if TYPE=="DRAW":
-            BlackScreen = ursina.Entity(
+    messages={
+        "DRAW" : "You had a Draw!",
+        "WIN" : "You won! Good game!",
+        "LOSE" : "You lost. You're a failure in life."
+    }
+
+    BlackScreen = ursina.Entity(
         parent = ursina.camera.ui,
         model = 'cube',
         scale = (2,2),                                           
@@ -32,7 +37,7 @@ def showEndScreen(TYPE):
         position = (0,0),                                                                                                             
         color = ursina.color.black 
     )
-    b = ursina.Text(text='You had a Draw!', color=ursina.color.white, size=10,origin = (0,.5), parent = BlackScreen)
+    b = ursina.Text(text=messages[TYPE], color=ursina.color.white, size=10,origin = (0,.5), parent = BlackScreen)
     b.default_resolution = 1080 * b.size
 
 

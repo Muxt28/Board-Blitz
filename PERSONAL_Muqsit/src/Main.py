@@ -78,6 +78,7 @@ def input(key):
                     
                     if values != None:
                         print(values)
+                        UserInterface.showEndScreen("WIN" if values=="*[ Player 1 has Won ]*" else "LOSE")
                         ursina.invoke(sys.exit,delay=5)
                         
 app.run()
