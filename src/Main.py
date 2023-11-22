@@ -73,7 +73,7 @@ def input(key):
                     # if values == '*[ Your Turn ]*' or values == '*[ Player 1 Turn ]*' or values == '*[ Player 2 Turn ]*':
                     #     print(f'Values : {values}')
                     start = True
-                    values = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, values)
+                    values = GameManager.BOARD_SCENE_GLOBAL.receive()
             
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
