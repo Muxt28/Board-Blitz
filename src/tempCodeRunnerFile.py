@@ -1,1 +1,1 @@
-setPlayers
+GameManager
