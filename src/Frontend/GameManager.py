@@ -370,7 +370,7 @@ class MultiplayerBoardScene():
             # print("DEBUG\n\nn\n" + pos)
 
             # print("DEBUG2")
-            print(coordinates[pos])
+            # print(coordinates[pos])
             if self.player_Counter == 'X':
                 self.placeX(pos, False)
             else:
