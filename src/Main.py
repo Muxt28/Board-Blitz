@@ -68,14 +68,15 @@ def input(key):
                 if mouse.world_point==None:
                      # player didnt touch the screen, ignore
                     return
+                print('ddddddddddddddddd', GameManager.BOARD_SCENE_GLOBAL.__class__.__name__)
                 
-
                 if start == False and GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'MultiplayerBoardScene':
                     start = True
                     values = GameManager.BOARD_SCENE_GLOBAL.receive()
-                
+
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'AIBoardScene':
-                        values, board = GameManager.BOARD_SCENE_GLOBAL.GamePlay()
+                        print('in')
+                        values, board = GameManager.BOARD_SCENE_GLOBAL.GamePlay(mouse.world_point)
         
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
@@ -85,6 +86,11 @@ def input(key):
                     return
                 
                 BoxesFilled += 1
+                try:
+                    GameManager.BOARD_SCENE_GLOBAL.board = board
+                    GameManager.BOARD_SCENE_GLOBAL.BoxesFilled += 1
+                except Exception:
+                    pass
                 # print(f'Boxes FIlled : {BoxesFilled}')
                 if BoxesFilled == 9:
                     global app
