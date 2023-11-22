@@ -135,14 +135,17 @@ class AIBoardScene():
         return self.startGame()
 
 
-    def setPlayers(self):
+    def GamePlay(self):
         if self.BoxesFilled == 0:
-            self.setStatusText('AI Move')
-            AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
+            if self.First_Player == 0:
+                self.setStatusText('AI Move')
+                AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
+            else:
+                self.setStatusText('Your Move')
+                # self.__Player_Manager()
+            return self.player_Counter, self.Ai_Counter, self.board
         else:
-            self.setStatusText('Your Move')
-            # self.__Player_Manager()
-        return self.player_Counter, self.Ai_Counter, self.board
+            if 
 
     def onBoardClick(self):
         pass

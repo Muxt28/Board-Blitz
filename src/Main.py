@@ -74,7 +74,7 @@ def input(key):
                     values = GameManager.BOARD_SCENE_GLOBAL.receive()
                 
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'AIBoardScene':
-                        values, board = GameManager.BOARD_SCENE_GLOBAL.setPlayers()
+                        values, board = GameManager.BOARD_SCENE_GLOBAL.GamePlay()
         
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
