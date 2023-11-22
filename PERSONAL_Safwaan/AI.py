@@ -1,71 +1,46 @@
-from random import randint
+import random
 
+class AI(Player):
+    def __init__(self, letter):
+        super().__init__(letter)
 
-class AI:
-    def __init__(self):
-        self.board = [['-' for columns in range(3)] for rows in range(3)]
-        self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
-        self.startPos = ['00', '02', '11', '20', '22']
-        
-
-        self.player_choose = randint(0,1)
-
-    def __selectStartPos(self):
-        return self.startPos[randint(0, 4)]
-        #These moves will only be called when the player starts first and takes the middle - its that V shape
-    def move10(self):
-        self.board[1][0] = "O"
-    def move21(self):
-        self.board[2][1] = "O"
-    def move12(self):
-        self.board[1][2] = "O"
-    
-
-    #These occur when ai starts first - the L shape
-    def move00(self):
-        self.board[self.startPos[0[0]]][self.startPos[0[1]]] = "X"
-    def move01(self):
-        move = self.startPos[1]
-        self.board[move[0]][move[1]] = "X"
-    def move02(self):
-        move = self.startPos[2]
-        self.board[move[0]][move[1]] = "X"
-    def move20(self):
-        move = self.startPos[6]
-        self.board[move[0]][move[1]] = "X"
-    def move21(self):
-        move = self.startPos[7]
-        self.board[move[0]][move[1]] = "X"
-    def move21(self):
-        move = self.startPos[8]
-        self.board[move[0]][move[1]] = "X"
-    
-        
-    def startAI(self):
-        x,y = self.__selectRandomPos().split(' ')
-        self.board[x][y] 
-        
-    def playerStart(self):
-        self.move20()
-        #after opponent moves
-        self.move02()
-        #after next move
-        self.move00()
-        #next
-        self.move01()
-        if #victory != "yes":
-            self.move20()  
-    
-
-    def choosePlayer(self):
-        if self.player_choose == 0:
-            self.startAI()
+    def get_move(self, game):
+        if len(game.available_moves()) == 9:
+            square = random.choice(game.available_moves())
         else:
-            self.playerStart()
+            square = self.minimax(game, self.letter)['position']
+        return square
 
-    
-      
+    def minimax(self, state, player):
+        max_player = self.letter
+        if player == 'X':
+            other_player = 'O'
+        else:
+            player = 'X'
 
+        if state.current_winner == other_player:
+            return {'position': None, 'score': 1 * (state.num_empty_squares() + 1) if other_player == max_player else -1 * (state.num_empty_squares() + 1)}
+        elif not state.empty_squares():
+            return {'position': None, 'score': 0}
 
+        if player == max_player:
+            best = {'position': None, 'score': float('-inf')}
+        else:
+            best = {'position': None, 'score': float('inf')}
 
-AI.choosePlayer(AI())
+        empty_squares = state.num_empty_squares() + 1  # +1 so u can avoid repeated calculations
+        for possible_move in state.available_moves():
+            state.make_move(possible_move, player)
+            sim_score = self.minimax(state, other_player)
+            state.undo_move(possible_move)
+
+            sim_score['position'] = possible_move
+
+            if player == max_player:
+                if sim_score['score'] > best['score']:
+                    best = sim_score
+            else:
+                if sim_score['score'] < best['score']:
+                    best = sim_score
+
+        return best
