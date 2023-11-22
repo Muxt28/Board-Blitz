@@ -235,6 +235,8 @@ class MultiplayerBoardScene():
         
     def onCodeEntered(self):
         self.userInputtedCode = self.code_field.text
+        self.join_button.enabled = False
+        self.join_button.visible = False
         ursina.destroy(self.gradient)
         ursina.destroy(self.code_field)
         ursina.destroy(self.join_button)
