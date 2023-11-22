@@ -137,19 +137,20 @@ class AIBoardScene():
 
 
     def GamePlay(self, mousePosition):
-        if self.BoxesFilled == 0:
-            if self.First_Player == 0:
-                self.setStatusText('AI Move')
-                print('AI')
-                AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
+        while self.BoxesFilled < 9:
+            if self.BoxesFilled == 0:
+                if self.First_Player == 0:
+                    # self.setStatusText('AI Move')
+                    print('AI')
+                    AI.AI_Manager.Options(AI.AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled))
+                else:
+                    print('player')
+                    # self.setStatusText('Your Move')
+                    # self.__Player_Manager()
+                self.BoxesFilled += 1
             else:
-                print('player')
-                self.setStatusText('Your Move')
-                # self.__Player_Manager()
-            return self.player_Counter, self.Ai_Counter, self.board
-        else:
-            if self.BoxesFilled % 2 == 0:
-                AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
+                if self.BoxesFilled % 2 == 0:
+                    AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
 
 
     def onBoardClick(self):
