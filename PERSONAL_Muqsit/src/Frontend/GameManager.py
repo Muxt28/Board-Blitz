@@ -149,13 +149,13 @@ class ThreeXThreeBoardScene():
         }
         return coordDict[gameCoords]
 
-    def placeX(self, coords):
-        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
+    def placeX(self, coords): # self.placeX(00)
+        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.red)
         newX.position = self.getPosFromCoords(coords)    
         
     
     def placeO(self, coords):
-        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10)
+        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
         newO.position = self.getPosFromCoords(coords)    
         pass
 
