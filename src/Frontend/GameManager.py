@@ -294,27 +294,22 @@ class MultiplayerBoardScene():
         self.hasGameStarted = True
         # self.CurrentTurn = "X"
     
-    def getPosFromCoords(self, gameCoord, is00Coords):
-        gameCoords = None
-        if is00Coords != True:
+    def getPosFromCoords(self, gameCoord):
+        XROW = 0
+        YROW = 0
+        if gameCoord.X <= -55:
             XROW = 0
+        elif gameCoord.X > -55 and gameCoord.X <= 50:
+            XROW = 1
+        elif gameCoord.X > 50:
+            XROW = 2
+        if gameCoord.Z <= -55:
+            YROW = 2
+        elif gameCoord.Z > -55 and gameCoord.Z <= 50:
+            YROW = 1
+        elif gameCoord.Z > 50:
             YROW = 0
-            if gameCoord.X <= -55:
-                XROW = 0
-            elif gameCoord.X > -55 and gameCoord.X <= 50:
-                XROW = 1
-            elif gameCoord.X > 50:
-                XROW = 2
-            if gameCoord.Z <= -55:
-                YROW = 2
-            elif gameCoord.Z > -55 and gameCoord.Z <= 50:
-                YROW = 1
-            elif gameCoord.Z > 50:
-                YROW = 0
-            gameCoords = str(YROW) + str(XROW)
-        else:
-            gameCoords = gameCoord
-
+        gameCoords = str(YROW) + str(XROW)
         coordDict = {
             "00" : (-107,7,107),
             "01" : (0,7,107),
@@ -328,14 +323,14 @@ class MultiplayerBoardScene():
         }
         return coordDict[gameCoords]
 
-    def placeX(self, coords, is00):
+    def placeX(self, coords):
         newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.red)
-        newX.position = self.getPosFromCoords(coords, is00)    
+        newX.position = self.getPosFromCoords(coords)    
         
     
-    def placeO(self, coords, is00):
+    def placeO(self, coords):
         newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
-        newO.position = self.getPosFromCoords(coords, is00)    
+        newO.position = self.getPosFromCoords(coords)    
         pass
 
     def handleMouseClick(self, pos, data):        
@@ -353,12 +348,12 @@ class MultiplayerBoardScene():
 
         if data != '*[ Your Turn ]*':
             coords = self.GameSocket.recv(1024).decode()
-            print("DEBUG\n\nn\n" + coords)
+            # print("DEBUG\n\nn\n" + coords)
             if self.opponent_Counter == 'X':
-                print(coords)
-                self.placeX(coords, True)
+                # print(coords)
+                self.placeX(coords)
             else:
-                self.placeO(coords, True)
+                self.placeO(coords)
 
 
         else:
@@ -366,15 +361,16 @@ class MultiplayerBoardScene():
             val_list = list(coordinates.values())
 
             position = val_list.index(self.getPosFromCoords(pos))
-            print("DEBUG\n\nn\n" + pos)
+            print(f'POsition : {position} ---------- pos')
+            # print("DEBUG\n\nn\n" + pos)
             xy = key_list[position]
             x, y = int(xy[0]), int(xy[1])
-            print("DEBUG2")
+            # print("DEBUG2")
             print(coordinates[coords])
             if self.player_Counter == 'X':
-                self.placeX(coordinates[coords], True)
+                self.placeX(coordinates[coords])
             else:
-                self.placeO(coordinates[coords], True)
+                self.placeO(coordinates[coords])
 
 
     def destroy(self):

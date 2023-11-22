@@ -60,7 +60,7 @@ def input(key):
         if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"] or GameManager.STATES["AIScene"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
-                print(mouse.world_point)
+                # print(mouse.world_point)
                 if mouse.world_point==None:
                      # player didnt touch the screen, ignore
                     return
@@ -73,7 +73,7 @@ def input(key):
             
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
-                    
+
                 if values == 'NOT VALID':
                     GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
                     return
