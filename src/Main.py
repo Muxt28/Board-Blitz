@@ -61,21 +61,19 @@ def input(key):
         pass
 
     if InputHandler.GetInputState("TrackingMouse"):
-        if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"]:
+        if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"] or GameManager.STATES["AIScene"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
                 print(mouse.world_point)
                 if mouse.world_point==None:
                      # player didnt touch the screen, ignore
                     return
-                print('ddddddddddddddddd', GameManager.BOARD_SCENE_GLOBAL.__class__.__name__)
                 
                 if start == False and GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'MultiplayerBoardScene':
                     start = True
                     values = GameManager.BOARD_SCENE_GLOBAL.receive()
 
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'AIBoardScene':
-                        print('in')
                         values, board = GameManager.BOARD_SCENE_GLOBAL.GamePlay(mouse.world_point)
         
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
