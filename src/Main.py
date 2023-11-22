@@ -60,7 +60,7 @@ def input(key):
         if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"] or GameManager.STATES["AIScene"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
-                print(mouse.world_point)
+                # print(mouse.world_point)
                 if mouse.world_point==None:
                      # player didnt touch the screen, ignore
                     return

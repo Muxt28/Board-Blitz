@@ -321,14 +321,14 @@ class MultiplayerBoardScene():
         }
         return coordDict[gameCoords]
 
-    def placeX(self, coords, is00):
+    def placeX(self, coords):
         newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.red)
-        newX.position = self.getPosFromCoords(coords, is00)    
+        newX.position = self.getPosFromCoords(coords)    
         
     
-    def placeO(self, coords, is00):
+    def placeO(self, coords):
         newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
-        newO.position = self.getPosFromCoords(coords, is00)    
+        newO.position = self.getPosFromCoords(coords)    
         pass
 
     def handleMouseClick(self, pos, data):        
