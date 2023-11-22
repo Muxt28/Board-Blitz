@@ -54,7 +54,7 @@ def update():
             camera.look_at = ursina.Vec3(0,0,0)
 
 def input(key):
-    global BoxesFilled, board
+    global BoxesFilled, board, start
     if InputHandler.GetInputState("TrackingInput"):
         pass
 
