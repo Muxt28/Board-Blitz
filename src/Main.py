@@ -73,7 +73,7 @@ def input(key):
             
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
-                    
+
                 if values == 'NOT VALID':
                     GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
                     return
