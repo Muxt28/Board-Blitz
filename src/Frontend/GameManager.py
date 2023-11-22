@@ -16,7 +16,8 @@ import socket
 STATES = {
     "IN_MENU" : False,
     "In3x3Single" : False,
-    "In3x3Multiplayer" : False
+    "In3x3Multiplayer" : False,
+    "AIScene" : False
 }
 
 MENU_GLOBAL = False
@@ -44,6 +45,7 @@ class Menu():
         self.List = ursina.ButtonList(button_dict= {
             'Single Player' : self.singlePlayerClick,
             'Multiplayer' : self.multiPlayerClick,
+            'Play Against AI' : self.AIClick,
             'Go back' : self.goBack
         }, scale = (1,1), position = (-.8,0.1), enabled=False, button_height=1.5)
 
@@ -99,8 +101,127 @@ class Menu():
 
 
 class AIBoardScene():
-    def __init__(self):
+    def __init__(self) -> None:
+        STATES["AIScene"] = True
+        self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), collider = "box", shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10, onclick = self.onBoardClick)
+        self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
+        self.Back.on_click = self.destroy
+        self.Back.text_entity.scale = 14
+        self.hasGameStarted=False
+        # self.StatusText = ursina.Text(
+        #     text="The game will be starting soon...",
+        #     position = ursina.window.top,
+        #     origin = (0,1),
+        #     scale = 1.6
+        #     )
+        
+        self.startGame()
+
+    def onBoardClick(self):
         pass
+
+    def setStatusText(self, text):
+        self.StatusText.text = text
+    
+    def startGame(self):
+        if self.hasGameStarted:
+            return 1
+        self.hasGameStarted = True
+        # self.CurrentTurn = "X"
+    
+    def getPosFromCoords(self, gameCoord, isAI):
+        if isAI != True:
+            XROW = 0
+            YROW = 0
+            if gameCoord.X <= -55:
+                XROW = 0
+            elif gameCoord.X > -55 and gameCoord.X <= 50:
+                XROW = 1
+            elif gameCoord.X > 50:
+                XROW = 2
+            if gameCoord.Z <= -55:
+                YROW = 2
+            elif gameCoord.Z > -55 and gameCoord.Z <= 50:
+                YROW = 1
+            elif gameCoord.Z > 50:
+                YROW = 0
+            gameCoord = str(YROW) + str(XROW)
+        coordDict = {
+            "00" : (-107,7,107),
+            "01" : (0,7,107),
+            "02" : (107,7,107),
+            "10" : (-107,7,0),
+            "11" : (0,7,0),
+            "12" : (107,7,0),
+            "20" : (-107,7,-107),
+            "21" : (0,7,-107),
+            "22" : (107,7,-107),
+        }
+        return coordDict[gameCoord]
+
+    def placeX(self, coords):
+        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10,  color=ursina.color.red)
+        newX.position = self.getPosFromCoords(coords, False)  # coords here are mouse coords Vector3  
+        
+    
+    def placeO(self, coords):
+        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
+        newO.position = self.getPosFromCoords(coords, True)   # coords here are Board 00 01 coordinates Ai player 
+        pass
+
+    def handleMouseClick(self, pos, BoxesFilled, board):        
+        thread = ThreadPool(processes=1)
+        coordinates = {
+            "00" : (-107,7,107),
+            "01" : (0,7,107),
+            "02" : (107,7,107),
+            "10" : (-107,7,0),
+            "11" : (0,7,0),
+            "12" : (107,7,0),
+            "20" : (-107,7,-107),
+            "21" : (0,7,-107),
+            "22" : (107,7,-107),
+        }
+
+        key_list = list(coordinates.keys())
+        val_list = list(coordinates.values())
+
+        position = val_list.index(self.getPosFromCoords(pos, False))
+
+        xy = key_list[position]
+        x, y = int(xy[0]), int(xy[1])
+        if board[x][y] == '-':
+            threadReturn = thread.apply_async(Library.LocalPlayer.GamePlay, (Library.LocalPlayer(BoxesFilled, key_list[position], board),))
+            win, board = threadReturn.get()
+        else:
+            return 'NOT VALID', board
+
+        if pos != None:
+            if BoxesFilled % 2 == 0:
+                self.placeX(pos)
+            else:
+                self.placeO(pos)
+
+        if win  == '*[ Player 1 has Won ]*' or win == '*[ Player 2 has Won ]*':
+            return win, board
+        else:
+            return None, board
+
+
+    def destroy(self):
+        global MENU_GLOBAL
+        STATES["AIScene"] = False
+        ursina.destroy(self.Board)
+        ursina.destroy(self.Back)
+        try:
+            ursina.destroy(self.StatusText)
+        except AttributeError:
+            pass
+        MENU_GLOBAL = Menu(False)
+
+    def onUpdate(self, mouseCoords):
+        if mouseCoords!=None:
+            pass
 
 
 class MultiplayerBoardScene():
