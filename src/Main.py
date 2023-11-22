@@ -36,7 +36,7 @@ ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
 # GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
+GameManager.BOARD_SCENE_GLOBAL = GameManager.MultiplayerBoardScene()
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
 
@@ -63,7 +63,10 @@ def input(key):
                     return
 
                 try:
-                    values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
+                    values = ''
+                    while values != '1' or values != '2' or values != ':':
+                        values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
+                    print(values)
                     if values != '*[ You Have Won ]*' or values != '*[ Player 1 has Won ]*' or values != '*[ Player 2 has Won ]*':
                         GameManager.BOARD_SCENE_GLOBAL.StatusText = values
                         GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, values)
