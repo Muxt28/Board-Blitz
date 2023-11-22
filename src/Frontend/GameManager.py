@@ -3,6 +3,7 @@ import ursina.mouse as mouse
 import ursina.shaders as shaders
 import ursina.camera as camera 
 import ursina.window as window
+from ursina import Text
 
 import sys
 import pickle
@@ -110,13 +111,14 @@ class AIBoardScene():
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
         self.hasGameStarted=False
-        self.StatusText = ursina.Text(
-            text="The game will be starting soon...",
+        self.StatusText = Text(
+           # text="The game will be starting soon...",
             position = ursina.window.top,
             origin = (0,1),
             scale = 1.6
-            )
-        
+        )
+
+        self.StatusText.text = "The game will be starting soon..."
 
         self.running = True
         self.BoxesFilled = 0
@@ -139,12 +141,14 @@ class AIBoardScene():
     def GamePlay(self, mousePosition):
         if self.BoxesFilled == 0:
             if self.First_Player == 0:
-                self.setStatusText('AI Move')
+                #self.setStatusText('AI Move')
+                self.StatusText.text = "AI Move"
                 print('AI')
                 AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
             else:
                 print('player')
-                self.setStatusText('Your Move')
+                #self.setStatusText('Your Move')
+                self.StatusText.text = "Your Move"
                 # self.__Player_Manager()
             return self.player_Counter, self.Ai_Counter, self.board
         else:
