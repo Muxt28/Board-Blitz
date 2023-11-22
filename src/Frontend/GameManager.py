@@ -231,10 +231,12 @@ class MultiplayerBoardScene():
         self.code_field = ursina.InputField(y=-.12, limit_content_to='0123456789', default_value='1024', active=True)
         self.code_field.text = ''
         self.GameSocket = socket.socket()
-        self.join_button = ursina.Button(text='Join', scale=.1, color=ursina.color.cyan.tint(-.4), y=-.26, on_click=self.onCodeEntered).fit_to_text()
+        self.join_button = ursina.Button(text='Join', scale=.1, color=ursina.color.cyan.tint(-.4), y=-.26)
+        self.join_button.on_click=self.onCodeEntered
         
     def onCodeEntered(self):
         self.userInputtedCode = self.code_field.text
+        self.join_button.position = (10000,10000)
         self.join_button.visible = False
         ursina.destroy(self.gradient)
         ursina.destroy(self.code_field)
