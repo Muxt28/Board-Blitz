@@ -292,27 +292,22 @@ class MultiplayerBoardScene():
         self.hasGameStarted = True
         # self.CurrentTurn = "X"
     
-    def getPosFromCoords(self, gameCoord, is00Coords):
-        gameCoords = None
-        if is00Coords != True:
+    def getPosFromCoords(self, gameCoord):
+        XROW = 0
+        YROW = 0
+        if gameCoord.X <= -55:
             XROW = 0
+        elif gameCoord.X > -55 and gameCoord.X <= 50:
+            XROW = 1
+        elif gameCoord.X > 50:
+            XROW = 2
+        if gameCoord.Z <= -55:
+            YROW = 2
+        elif gameCoord.Z > -55 and gameCoord.Z <= 50:
+            YROW = 1
+        elif gameCoord.Z > 50:
             YROW = 0
-            if gameCoord.X <= -55:
-                XROW = 0
-            elif gameCoord.X > -55 and gameCoord.X <= 50:
-                XROW = 1
-            elif gameCoord.X > 50:
-                XROW = 2
-            if gameCoord.Z <= -55:
-                YROW = 2
-            elif gameCoord.Z > -55 and gameCoord.Z <= 50:
-                YROW = 1
-            elif gameCoord.Z > 50:
-                YROW = 0
-            gameCoords = str(YROW) + str(XROW)
-        else:
-            gameCoords = gameCoord
-
+        gameCoords = str(YROW) + str(XROW)
         coordDict = {
             "00" : (-107,7,107),
             "01" : (0,7,107),
@@ -354,9 +349,9 @@ class MultiplayerBoardScene():
             print("DEBUG\n\nn\n" + coords)
             if self.opponent_Counter == 'X':
                 print(coords)
-                self.placeX(coords, True)
+                self.placeX(coords, False)
             else:
-                self.placeO(coords, True)
+                self.placeO(coords, False)
 
 
         else:
@@ -370,9 +365,9 @@ class MultiplayerBoardScene():
             print("DEBUG2")
             print(coordinates[coords])
             if self.player_Counter == 'X':
-                self.placeX(coordinates[coords], True)
+                self.placeX(coordinates[coords])
             else:
-                self.placeO(coordinates[coords], True)
+                self.placeO(coordinates[coords])
 
 
     def destroy(self):
