@@ -344,6 +344,7 @@ class MultiplayerBoardScene():
             values = self.GameSocket.recv(1024).decode()
             if values == '*[ Your Turn ]*' or values == '*[ Player 1 Turn ]*' or values == '*[ Player 2 Turn ]*':
                 print(f'Values : {values}')
+                self.setStatusText(values)
                 self.handleMouseClick(mouse.world_point, values)
                 turns += 1
             else:
