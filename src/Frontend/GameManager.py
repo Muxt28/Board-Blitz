@@ -56,7 +56,7 @@ class Menu():
     def multiPlayerClick(self):
         global MENU_GLOBAL
         global BOARD_SCENE_GLOBAL
-        BOARD_SCENE_GLOBAL = MultiplayeBoardScene()
+        BOARD_SCENE_GLOBAL = MultiplayerBoardScene()
         MENU_GLOBAL.destroy()
         pass
 
@@ -90,7 +90,7 @@ class Menu():
         MENU_GLOBAL = False
 
 
-class MultiplayeBoardScene():
+class MultiplayerBoardScene():
     def __init__(self) -> None:
         STATES["In3x3Single"] = True
         self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), collider = "box", shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10, onclick = self.onBoardClick)
@@ -297,12 +297,12 @@ class ThreeXThreeBoardScene():
         return coordDict[gameCoords]
 
     def placeX(self, coords):
-        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
+        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10,  color=ursina.color.red)
         newX.position = self.getPosFromCoords(coords)    
         
     
     def placeO(self, coords):
-        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10)
+        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
         newO.position = self.getPosFromCoords(coords)    
         pass
 
