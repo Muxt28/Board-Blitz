@@ -46,7 +46,7 @@ board = [['-'for _ in range(3)] for _ in range(3)]
 def update():
     if GameManager.STATES["IN_MENU"]:
             GameManager.MENU_GLOBAL.onUpdate()
-    if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"] or GameManager.STATES["AIScene"]:
+    if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"]:
             camera.position = (0,200,-230)
             camera.rotation = (45,0,0)
             camera.look_at = ursina.Vec3(0,0,0)
@@ -57,10 +57,10 @@ def input(key):
         pass
 
     if InputHandler.GetInputState("TrackingMouse"):
-        if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"] or GameManager.STATES["AIScene"]:
+        if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
-                # print(mouse.world_point)
+                print(mouse.world_point)
                 if mouse.world_point==None:
                      # player didnt touch the screen, ignore
                     return
@@ -73,7 +73,6 @@ def input(key):
             
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
-
                 if values == 'NOT VALID':
                     GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
                     return
