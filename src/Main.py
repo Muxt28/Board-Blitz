@@ -43,6 +43,7 @@ GameManager.BOARD_SCENE_GLOBAL.setStatusText = 'CLick Anywhere to start'
 
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
+start = False
 
 def update():
     if GameManager.STATES["IN_MENU"]:
@@ -66,11 +67,13 @@ def input(key):
                      # player didnt touch the screen, ignore
                     return
                 
-                if GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'MultiplayerBoardScene':
-                    values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
-                    if values == '*[ Your Turn ]*' or values == '*[ Player 1 Turn ]*' or values == '*[ Player 2 Turn ]*':
-                        print(f'Values : {values}')
-                        GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, values)
+
+                if start == False and GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'MultiplayerBoardScene':
+                    # values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
+                    # if values == '*[ Your Turn ]*' or values == '*[ Player 1 Turn ]*' or values == '*[ Player 2 Turn ]*':
+                    #     print(f'Values : {values}')
+                    start = True
+                    values = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, values)
             
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
@@ -98,6 +101,10 @@ def input(key):
                         MSG = 'P2'
                     elif values == '*[ Your opponent has won ]*':
                         MSG = 'LOSE'
+                    elif values == 'DRAW':
+                        global app
+                        UserInterface.showEndScreen("DRAW")
+                        ursina.invoke(sys.exit,delay=5)
                     
     
                          

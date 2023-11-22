@@ -249,7 +249,7 @@ class MultiplayerBoardScene():
         self.Back.text_entity.scale = 14
         self.hasGameStarted=False
         self.StatusText = ursina.Text(
-            text="The game will be starting soon...",
+            text="*[ Connecting to Opponent ]*",
             position = ursina.window.top,
             origin = (0,1),
             scale = 1.6
@@ -338,6 +338,19 @@ class MultiplayerBoardScene():
         newO.position = self.getPosFromCoords(coords, is00BoardCoord)    
         pass
 
+    def receive(self):
+        turns = 0
+        while turns < 9:
+            values = self.GameSocket.recv(1024).decode()
+            if values == '*[ Your Turn ]*' or values == '*[ Player 1 Turn ]*' or values == '*[ Player 2 Turn ]*':
+                print(f'Values : {values}')
+                self.handleMouseClick(mouse.world_point, values)
+                turns += 1
+            else:
+                return values
+        return 'DRAW'
+            
+
     def handleMouseClick(self, pos, data):        
         coordinates = {
             "00" : (-107,7,107),
@@ -350,6 +363,7 @@ class MultiplayerBoardScene():
             "21" : (0,7,-107),
             "22" : (107,7,-107),
         }
+
 
         if data != '*[ Your Turn ]*':
             coords = self.GameSocket.recv(1024).decode()
