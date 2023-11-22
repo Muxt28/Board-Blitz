@@ -165,7 +165,7 @@ class ThreeXThreeBoardScene():
         return coordDict[gameCoords]
 
     def placeX(self, coords):
-        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
+        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.red)
         newX.position = self.getPosFromCoords(coords)    
         # position newX with coords
         # handle 3d stuff here... and THEN 
@@ -174,7 +174,7 @@ class ThreeXThreeBoardScene():
     
     def placeO(self, coords):
         # handle 3d stuff here.. and then
-        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10)
+        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
         newO.position = self.getPosFromCoords(coords)    
         pass
         # backend
