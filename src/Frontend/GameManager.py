@@ -359,10 +359,10 @@ class MultiplayerBoardScene():
             val_list = list(coordinates.values())
 
             position = val_list.index(self.getPosFromCoords(pos))
-            print("DEBUG\n\nn\n" + pos)
+            # print("DEBUG\n\nn\n" + pos)
             xy = key_list[position]
             x, y = int(xy[0]), int(xy[1])
-            print("DEBUG2")
+            # print("DEBUG2")
             print(coordinates[coords])
             if self.player_Counter == 'X':
                 self.placeX(coordinates[coords])
