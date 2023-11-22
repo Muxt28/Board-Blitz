@@ -60,6 +60,13 @@ class Menu():
         MENU_GLOBAL.destroy()
         pass
 
+    def AIClick(self):
+        global MENU_GLOBAL
+        global BOARD_SCENE_GLOBAL
+        BOARD_SCENE_GLOBAL = AIBoardScene()
+        MENU_GLOBAL.destroy()
+        pass
+
     def goBack(self):
         self.PlayButton.visible = True
         self.List.enabled = False
@@ -90,31 +97,47 @@ class Menu():
         MENU_GLOBAL = False
 
 
+class AIBoardScene():
+    def __init__(self):
+        pass
+
+
 class MultiplayerBoardScene():
-    def __init__(self) -> None:
-        STATES["In3x3Single"] = True
+    def __init__(self, gameType="In3x3Multiplayer") -> None:
+        self.currentGameType = gameType
+        self.gradient = ursina.Entity(model='quad', texture='vertical_gradient', parent=camera.ui, scale=(camera.aspect_ratio,1), color=ursina.color.hsv(240,.6,.1,.75))
+        self.code_field = ursina.InputField(y=-.12, limit_content_to='0123456789', default_value='1024', active=True)
+        self.code_field.text = ''
+        self.GameSocket = socket.socket()
+        self.join_button = ursina.Button(text='Join', scale=.1, color=ursina.color.cyan.tint(-.4), y=-.26, on_click=self.onCodeEntered).fit_to_text()
+        
+    def onCodeEntered(self):
+        self.userInputtedCode = self.code_field.text
+        ursina.destroy(self.gradient)
+        ursina.destroy(self.code_field)
+        ursina.destroy(self.join_button)
+        print(f"user inputted code was {self.userInputtedCode}")
+        STATES[self.currentGameType] = True
         self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), collider = "box", shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10, onclick = self.onBoardClick)
         self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
         self.hasGameStarted=False
         self.StatusText = ursina.Text(
-            text="*[ Connecting To Server ]*",
+            text="The game will be starting soon...",
             position = ursina.window.top,
             origin = (0,1),
             scale = 1.6
             )
         
-
-        self.GameSocket = socket.socket()
         try:
-            self.GameSocket.connect(('35.176.207.55', 5555))
+            self.GameSocket.connect(('35.176.207.55', 5557))
         except ConnectionRefusedError:
             self.GameSocket.connect(('35.176.207.55', 5556))
 
         print(self.GameSocket.recv(1024).decode())
 
-        self.GameSocket.send(input('Enter Code : ').encode())
+        self.GameSocket.send(self.userInputtedCode.encode())
         
         port = int(self.GameSocket.recv(1024).decode())
         print(f'Port : {port}')
@@ -132,8 +155,8 @@ class MultiplayerBoardScene():
         else:
             self.player_Counter = 'O'
             self.opponent_Counter = 'X'
-    
 
+        self.startGame()
 
     def onBoardClick(self):
         pass

@@ -11,6 +11,8 @@ from Frontend import (
     UserInterface
 )
 
+from time import sleep
+
 app = ursina.Ursina (
     title = "Board Blitz",
     borderless = False,
@@ -35,8 +37,9 @@ ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-# GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-GameManager.BOARD_SCENE_GLOBAL = GameManager.MultiplayerBoardScene()
+GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+# GameManager.BOARD_SCENE_GLOBAL = GameManager.MultiplayerBoardScene()
+
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
 
@@ -62,20 +65,10 @@ def input(key):
                      # player didnt touch the screen, ignore
                     return
 
-                try:
-                    values = ''
-                    while values != '1' or values != '2' or values != ':':
-                        values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
-                    print(values)
-                    if values != '*[ You Have Won ]*' or values != '*[ Player 1 has Won ]*' or values != '*[ Player 2 has Won ]*':
-                        GameManager.BOARD_SCENE_GLOBAL.StatusText = values
-                        GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, values)
-                except Exception as e :
-                    print(e)
-                    values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
-                    if values == 'NOT VALID':
-                        GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
-                        return
+                values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                if values == 'NOT VALID':
+                    GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
+                    return
                 
                 BoxesFilled += 1
                 # print(f'Boxes FIlled : {BoxesFilled}')

@@ -101,13 +101,13 @@ class GameManager:
         while (self.running or self.BoxesFilled < 9) and (win == False):
             print('*[ New Round ]*')
             if self.BoxesFilled % 2 == 0:
-                self.clientsConnected[0].send(b'*[ Your Turn ]*')
-                self.clientsConnected[1].send(b'*[ Player 1 Turn ]*')
+                self.clientsConnected[0].send('*[ Your Turn ]*'.encode())
+                self.clientsConnected[1].send('*[ Player 1 Turn ]*'.encode())
                 self.currentPlayer = 'X'
                 self.player = self.clientsConnected[0]
             else:
-                self.clientsConnected[1].send(b'*[ Your Turn ]*')
-                self.clientsConnected[0].send(b'*[ Player 2 Turn ]*')
+                self.clientsConnected[1].send('*[ Your Turn ]*'.encode())
+                self.clientsConnected[0].send('*[ Player 2 Turn ]*'.encode())
                 self.currentPlayer = 'O'
                 self.player = self.clientsConnected[1]
 
