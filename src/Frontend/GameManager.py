@@ -298,6 +298,10 @@ class MultiplayerBoardScene():
     def getPosFromCoords(self, gameCoord):
         XROW = 0
         YROW = 0
+        print("DEBUG COORDS")
+        print(gameCoord)
+        x, y, z = gameCoord
+        print(x, y, z)
         if gameCoord.X <= -55:
             XROW = 0
         elif gameCoord.X > -55 and gameCoord.X <= 50:
