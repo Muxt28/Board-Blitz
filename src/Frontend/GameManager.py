@@ -249,9 +249,9 @@ class MultiplayerBoardScene():
             print("DEBUG2")
             print(coordinates[coords])
             if self.player_Counter == 'X':
-                self.placeX(pos, False)
+                self.placeX(coordinates[coords], True)
             else:
-                self.placeO(pos, False)
+                self.placeO(coordinates[coords], True)
 
 
     def destroy(self):
