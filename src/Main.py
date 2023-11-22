@@ -37,8 +37,8 @@ ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-# GameManager.BOARD_SCENE_GLOBAL = GameManager.MultiplayerBoardScene()
+# GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+GameManager.BOARD_SCENE_GLOBAL = GameManager.MultiplayerBoardScene()
 
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
@@ -64,8 +64,16 @@ def input(key):
                 if mouse.world_point==None:
                      # player didnt touch the screen, ignore
                     return
-
-                values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                
+                if GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'MultiplayerBoardScene':
+                    values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
+                    if values == '*[ Your Turn ]*' or values == '*[ Player 1 Turn ]*' or values == '*[ Player 2 Turn ]*':
+                        print(f'Values : {values}')
+                        GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, values)
+            
+                elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
+                    values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                    
                 if values == 'NOT VALID':
                     GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
                     return

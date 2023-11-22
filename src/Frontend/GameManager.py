@@ -215,7 +215,7 @@ class MultiplayerBoardScene():
         newO.position = self.getPosFromCoords(coords, is00)    
         pass
 
-    def handleMouseClick(self, pos, BoxesFilled, data):        
+    def handleMouseClick(self, pos, data):        
         coordinates = {
             "00" : (-107,7,107),
             "01" : (0,7,107),
