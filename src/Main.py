@@ -49,7 +49,8 @@ start = False
 def update():
     if GameManager.STATES["IN_MENU"]:
             GameManager.MENU_GLOBAL.onUpdate()
-    if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"]:
+    else:
+    #if GameManager.STATES["In3x3Single"] or GameManager.STATES["In3x3Multiplayer"]:
             camera.position = (0,200,-230)
             camera.rotation = (45,0,0)
             camera.look_at = ursina.Vec3(0,0,0)
