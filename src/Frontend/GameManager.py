@@ -295,24 +295,11 @@ class MultiplayerBoardScene():
         self.hasGameStarted = True
         # self.CurrentTurn = "X"
     
-    def getPosFromCoords(self, gameCoord):
+    def getPosFromCoords(self, gameCoord, is00BoardCoord):
         XROW = 0
         YROW = 0
         print("DEBUG COORDS")
         print(gameCoord)
-        if gameCoord.X <= -55:
-            XROW = 0
-        elif gameCoord.X > -55 and gameCoord.X <= 50:
-            XROW = 1
-        elif gameCoord.X > 50:
-            XROW = 2
-        if gameCoord.Z <= -55:
-            YROW = 2
-        elif gameCoord.Z > -55 and gameCoord.Z <= 50:
-            YROW = 1
-        elif gameCoord.Z > 50:
-            YROW = 0
-        gameCoords = str(YROW) + str(XROW)
         coordDict = {
             "00" : (-107,7,107),
             "01" : (0,7,107),
@@ -324,16 +311,31 @@ class MultiplayerBoardScene():
             "21" : (0,7,-107),
             "22" : (107,7,-107),
         }
-        return coordDict[gameCoords]
+        if is00BoardCoord != True:
+            if gameCoord.X <= -55:
+                XROW = 0
+            elif gameCoord.X > -55 and gameCoord.X <= 50:
+                XROW = 1
+            elif gameCoord.X > 50:
+                XROW = 2
+            if gameCoord.Z <= -55:
+                YROW = 2
+            elif gameCoord.Z > -55 and gameCoord.Z <= 50:
+                YROW = 1
+            elif gameCoord.Z > 50:
+                YROW = 0
+            gameCoord = str(YROW) + str(XROW)
+            return coordDict[gameCoord]
+        else:
+            return coordDict[gameCoord]
 
-    def placeX(self, coords):
+    def placeX(self, coords, is00BoardCoord=False):
         newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.red)
-        newX.position = self.getPosFromCoords(coords)    
+        newX.position = self.getPosFromCoords(coords, is00BoardCoord)    
         
-    
-    def placeO(self, coords):
+    def placeO(self, coords, is00BoardCoord=False):
         newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10, color=ursina.color.cyan)
-        newO.position = self.getPosFromCoords(coords)    
+        newO.position = self.getPosFromCoords(coords, is00BoardCoord)    
         pass
 
     def handleMouseClick(self, pos, data):        
