@@ -39,6 +39,7 @@ ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
 # GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
 GameManager.BOARD_SCENE_GLOBAL = GameManager.MultiplayerBoardScene()
+GameManager.BOARD_SCENE_GLOBAL.setStatusText = 'CLick Anywhere to start'
 
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
