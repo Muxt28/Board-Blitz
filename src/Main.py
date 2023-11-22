@@ -57,20 +57,47 @@ def input(key):
         if GameManager.STATES["In3x3Single"]:
             InputHandler.HandleMouse(key)
             if key=="left mouse down":
-                values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
-                
-                if values == 'NOT VALID':
-                     return
-                elif values == 'DISCONNECTED':
-                     print('*[ Opponent Disconnected ]*')
+                print(mouse.world_point)
+                if mouse.world_point==None:
+                     # player didnt touch the screen, ignore
+                    return
+
+                try:
+                    values = GameManager.BOARD_SCENE_GLOBAL.GameSocket.recv(1024).decode()
+                    if values != '*[ You Have Won ]*' or values != '*[ Player 1 has Won ]*' or values != '*[ Player 2 has Won ]*':
+                        GameManager.BOARD_SCENE_GLOBAL.StatusText = values
+                        GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, values)
+                except Exception as e :
+                    print(e)
+                    values, board = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                    if values == 'NOT VALID':
+                        GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
+                        return
                 
                 BoxesFilled += 1
-                print(f'Boxes FIlled : {BoxesFilled}')
+                # print(f'Boxes FIlled : {BoxesFilled}')
                 if BoxesFilled == 9:
-                     print('*[ Draw ]*')
-                     sys.exit()
+                    global app
+                    UserInterface.showEndScreen("DRAW")
+                    print('*[ Draw ]*')
+                    #sys.exit()
+                    ursina.invoke(sys.exit,delay=5)
                 
                 if values != None:
                     print(values)
-                    sys.exit()
+                    MSG = ""
+                    if values=="*[ You have Won ]*":
+                        MSG = 'WIN'
+                    elif values == '*[ Player 1 has Won ]*':
+                        MSG = 'P1'
+                    elif values == '*[ Player 2 has Won ]*':
+                        MSG = 'P2'
+                    elif values == '*[ Your opponent has won ]*':
+                        MSG = 'LOSE'
+                    
+    
+                         
+                    UserInterface.showEndScreen(MSG)
+                    ursina.invoke(sys.exit,delay=5)
+                        
 app.run()

@@ -54,9 +54,6 @@ class Menu():
         pass
     
     def multiPlayerClick(self):
-        # text = ursina.Text("Multiplayer is currently not supported!", color=ursina.color.red)
-        # ursina.invoke(ursina.destroy, text, delay=2)
-        # pass
         global MENU_GLOBAL
         global BOARD_SCENE_GLOBAL
         BOARD_SCENE_GLOBAL = MultiplayeBoardScene()
@@ -94,7 +91,152 @@ class Menu():
 
 
 class MultiplayeBoardScene():
-    pass
+    def __init__(self) -> None:
+        STATES["In3x3Single"] = True
+        self.Board = ursina.Entity(model=Models.GetModelPath("3x3"), collider = "box", shader=shaders.basic_lighting_shader, color=ursina.color.rgb(255, 226, 200), scale=10, onclick = self.onBoardClick)
+        self.Back = ursina.Button(scale = (.07, .07/(16/14)), text = "Exit", position = ursina.window.top_left, origin = (-1,1))
+        self.Back.on_click = self.destroy
+        self.Back.text_entity.scale = 14
+        self.hasGameStarted=False
+        self.StatusText = ursina.Text(
+            text="*[ Connecting To Server ]*",
+            position = ursina.window.top,
+            origin = (0,1),
+            scale = 1.6
+            )
+        
+
+        self.GameSocket = socket.socket()
+        try:
+            self.GameSocket.connect(('35.176.207.55', 5555))
+        except ConnectionRefusedError:
+            self.GameSocket.connect(('35.176.207.55', 5556))
+
+        print(self.GameSocket.recv(1024).decode())
+
+        self.GameSocket.send(input('Enter Code : ').encode())
+        
+        port = int(self.GameSocket.recv(1024).decode())
+        print(f'Port : {port}')
+        self.GameSocket.close()
+
+        self.GameSocket = socket.socket()
+        self.GameSocket.connect(('35.176.207.55', port))
+
+        self.player = self.GameSocket.recv(1024).decode()
+        print(self.player)
+
+        if self.player == '1':
+            self.player_Counter = 'X'
+            self.opponent_Counter = 'O'
+        else:
+            self.player_Counter = 'O'
+            self.opponent_Counter = 'X'
+    
+
+
+    def onBoardClick(self):
+        pass
+
+    def setStatusText(self, text):
+        self.StatusText.text = text
+    
+    def startGame(self):
+        if self.hasGameStarted:
+            return
+        self.hasGameStarted = True
+        # self.CurrentTurn = "X"
+    
+    def getPosFromCoords(self, gameCoord):
+        XROW = 0
+        YROW = 0
+        if gameCoord.X <= -55:
+            XROW = 0
+        elif gameCoord.X > -55 and gameCoord.X <= 50:
+            XROW = 1
+        elif gameCoord.X > 50:
+            XROW = 2
+        if gameCoord.Z <= -55:
+            YROW = 2
+        elif gameCoord.Z > -55 and gameCoord.Z <= 50:
+            YROW = 1
+        elif gameCoord.Z > 50:
+            YROW = 0
+        gameCoords = str(YROW) + str(XROW)
+        coordDict = {
+            "00" : (-107,7,107),
+            "01" : (0,7,107),
+            "02" : (107,7,107),
+            "10" : (-107,7,0),
+            "11" : (0,7,0),
+            "12" : (107,7,0),
+            "20" : (-107,7,-107),
+            "21" : (0,7,-107),
+            "22" : (107,7,-107),
+        }
+        return coordDict[gameCoords]
+
+    def placeX(self, coords):
+        newX = ursina.Entity(model=Models.GetModelPath("X"), shader=shaders.basic_lighting_shader, scale=10)
+        newX.position = self.getPosFromCoords(coords)    
+        
+    
+    def placeO(self, coords):
+        newO = ursina.Entity(model=Models.GetModelPath("O"), shader=shaders.basic_lighting_shader, scale=10)
+        newO.position = self.getPosFromCoords(coords)    
+        pass
+
+    def handleMouseClick(self, pos, BoxesFilled, data):        
+        coordinates = {
+            "00" : (-107,7,107),
+            "01" : (0,7,107),
+            "02" : (107,7,107),
+            "10" : (-107,7,0),
+            "11" : (0,7,0),
+            "12" : (107,7,0),
+            "20" : (-107,7,-107),
+            "21" : (0,7,-107),
+            "22" : (107,7,-107),
+        }
+
+        if data != '*[ Your Turn ]*':
+            coords = self.GameSocket.recv(1024).decode()
+            if self.opponent_Counter == 'X':
+                self.placeX(coords)
+            else:
+                self.placeO(coords)
+
+
+        else:
+            key_list = list(coordinates.keys())
+            val_list = list(coordinates.values())
+
+            position = val_list.index(self.getPosFromCoords(pos))
+
+            xy = key_list[position]
+            x, y = int(xy[0]), int(xy[1])
+
+            if self.player_Counter == 'X':
+                self.placeX(coordinates[coords])
+            else:
+                self.placeO(coordinates[coords])
+
+
+    def destroy(self):
+        global MENU_GLOBAL
+        STATES["In3x3Single"] = False
+        ursina.destroy(self.Board)
+        ursina.destroy(self.Back)
+        try:
+            ursina.destroy(self.StatusText)
+        except AttributeError:
+            pass
+        MENU_GLOBAL = Menu(False)
+
+    def onUpdate(self, mouseCoords):
+        if mouseCoords!=None:
+            pass
+
 
 class ThreeXThreeBoardScene():
     def __init__(self) -> None:
