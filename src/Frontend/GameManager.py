@@ -10,8 +10,10 @@ from multiprocessing.pool import ThreadPool
 
 sys.path.append("..")
 from Backend import Library
+from Backend import AI
 from Frontend import Models
 import socket
+from random import randint
 
 STATES = {
     "IN_MENU" : False,
@@ -108,14 +110,39 @@ class AIBoardScene():
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
         self.hasGameStarted=False
-        # self.StatusText = ursina.Text(
-        #     text="The game will be starting soon...",
-        #     position = ursina.window.top,
-        #     origin = (0,1),
-        #     scale = 1.6
-        #     )
+        self.StatusText = ursina.Text(
+            text="The game will be starting soon...",
+            position = ursina.window.top,
+            origin = (0,1),
+            scale = 1.6
+            )
         
-        self.startGame()
+
+        self.running = True
+        self.BoxesFilled = 0
+
+        self.currentPlayer = ''
+        self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
+        self.board = [['-'for _ in range(3)] for _ in range(3)]
+        self.StartingMove = ['00', '02', '20', '22', '11']
+        self.First_Player = randint(0, 1)
+
+        if self.BoxesFilled == 0:
+            self.player_Counter, self.Ai_Counter = 'O', 'X'
+        else:
+            self.player_Counter, self.Ai_Counter = 'X', 'O'
+
+        return self.startGame()
+
+
+    def setPlayers(self):
+        if self.BoxesFilled == 0:
+            self.setStatusText('AI Move')
+            AI.AI_Manager.Options(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled)
+        else:
+            self.setStatusText('Your Move')
+            # self.__Player_Manager()
+        return self.player_Counter, self.Ai_Counter, self.board
 
     def onBoardClick(self):
         pass
@@ -146,6 +173,7 @@ class AIBoardScene():
             elif gameCoord.Z > 50:
                 YROW = 0
             gameCoord = str(YROW) + str(XROW)
+
         coordDict = {
             "00" : (-107,7,107),
             "01" : (0,7,107),
@@ -169,6 +197,9 @@ class AIBoardScene():
         newO.position = self.getPosFromCoords(coords, True)   # coords here are Board 00 01 coordinates Ai player 
         pass
 
+    def getCounters(self, board):
+        return AI.AI.setPlayers(AI.AI(0,board))
+
     def handleMouseClick(self, pos, BoxesFilled, board):        
         thread = ThreadPool(processes=1)
         coordinates = {
@@ -183,29 +214,7 @@ class AIBoardScene():
             "22" : (107,7,-107),
         }
 
-        key_list = list(coordinates.keys())
-        val_list = list(coordinates.values())
-
-        position = val_list.index(self.getPosFromCoords(pos, False))
-
-        xy = key_list[position]
-        x, y = int(xy[0]), int(xy[1])
-        if board[x][y] == '-':
-            threadReturn = thread.apply_async(Library.LocalPlayer.GamePlay, (Library.LocalPlayer(BoxesFilled, key_list[position], board),))
-            win, board = threadReturn.get()
-        else:
-            return 'NOT VALID', board
-
-        if pos != None:
-            if BoxesFilled % 2 == 0:
-                self.placeX(pos)
-            else:
-                self.placeO(pos)
-
-        if win  == '*[ Player 1 has Won ]*' or win == '*[ Player 2 has Won ]*':
-            return win, board
-        else:
-            return None, board
+       
 
 
     def destroy(self):

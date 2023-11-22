@@ -54,48 +54,20 @@ class VerifyWin:
         return True
 
 
-class AI:
-    def __init__(self):
-        self.running = True
-        self.BoxesFilled = 0
 
-        self.currentPlayer = ''
-
-        self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
-        self.board = [['-'for _ in range(3)] for _ in range(3)]
-
-        self.StartingMove = ['00', '02', '20', '22', '11']
-
-        self.First_Player = randint(0, 1)
-        # self.First_Player = 0
-
-        # 0 = AI
-        # 1 = Player
-
-
-    def __displayBoard(self):
-        for rows in self.board:
-            print(' '.join(rows))
-        print('\n')
+    # def __displayBoard(self):
+    #     for rows in self.board:
+    #         print(' '.join(rows))
+    #     print('\n')
 
     def setCounters(self):
-        if self.First_Player == 0:
-            self.player_Counter, self.Ai_Counter = 'O', 'X'
+        if self.BoxesFilled == 0:
 
-            x,y = self.StartingMove[randint(0, 4)]
-            self.board[int(x)][int(y)] = self.Ai_Counter
-            self.__displayBoard()
-            self.BoxesFilled += 1
-
-        else:
-            self.player_Counter, self.Ai_Counter = 'X', 'O'
-            self.__Player_Manager()
-
-        while self.running:
-            if self.BoxesFilled % 2 == 0:
-                AI_Manager.Options(AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates))
-            elif self.BoxesFilled % 2 != 0:
-                self.__Player_Manager()
+        # while self.running:
+        #     if self.BoxesFilled % 2 == 0:
+        #         AI_Manager.Options(AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates))
+        #     elif self.BoxesFilled % 2 != 0:
+        #         self.__Player_Manager()
 
             self.running = VerifyWin.returnBoard(VerifyWin(self.board, self.First_Player))
 
@@ -109,36 +81,36 @@ class AI:
 
 
     def __Player_Manager(self):
-        choice = ''
-        while choice not in self.ValidCoordinates:
-            choice = input(':: > ')
-            x, y = int(choice[0]), int(choice[1])
-            if self.board[x][y] != '-':
-                choice = ''
+
         self.board[x][y] = self.player_Counter
 
 
 class AI_Manager:
 
-    def __init__(self, player_Counter, Ai_Counter, board, Valid_Coordinates):
+    def __init__(self, player_Counter, Ai_Counter, board, Valid_Coordinates, boxesFilled):
 
         self.player_Counter = player_Counter
         self.Ai_Counter = Ai_Counter
         self.board = board
+        self.Boxes_Filled = boxesFilled
 
         self.Valid_Coordinates = Valid_Coordinates
         self.StartingMove = ['00', '02', '20', '22', '11']
         sleep(randint(0, 2))
 
     def Options(self):
-        AttackReturn = self.__Attack()
-        if AttackReturn == 'DEFENCE' :
-            # print(f'Attacking : {AttackReturn}')
-            DefenceReturn = self.__Defence()
-            if DefenceReturn == 'PLAY':
-                # print(f'Defence : {DefenceReturn}')
-                playing = self.__play()
-                return playing
+        if self.Boxes_Filled == 0:
+            x,y = self.StartingMove[randint(0, 4)]
+            self.board[int(x)][int(y)] = self.Ai_Counter
+        else:
+            AttackReturn = self.__Attack()
+            if AttackReturn == 'DEFENCE' :
+                # print(f'Attacking : {AttackReturn}')
+                DefenceReturn = self.__Defence()
+                if DefenceReturn == 'PLAY':
+                    # print(f'Defence : {DefenceReturn}')
+                    playing = self.__play()
+                    return playing
 
     def __Defence(self):
     # check Horizantolly :
@@ -297,8 +269,5 @@ class AI_Manager:
             else:
                 self.Valid_Coordinates.remove(coord)
 
-
-
-AI.setCounters(AI())
 # for rows in board:
 #     print(' '.join(rows))
