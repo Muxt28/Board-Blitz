@@ -346,12 +346,12 @@ class MultiplayerBoardScene():
 
         if data != '*[ Your Turn ]*':
             coords = self.GameSocket.recv(1024).decode()
-            print("DEBUG\n\nn\n" + coords)
+            # print("DEBUG\n\nn\n" + coords)
             if self.opponent_Counter == 'X':
-                print(coords)
-                self.placeX(coords, False)
+                # print(coords)
+                self.placeX(coords)
             else:
-                self.placeO(coords, False)
+                self.placeO(coords)
 
 
         else:
