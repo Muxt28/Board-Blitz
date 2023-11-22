@@ -151,7 +151,10 @@ class AIBoardScene():
                     # self.__Player_Manager()
             else:
                 if self.BoxesFilled % 2 == 0:
-                    AI.AI_Manager.Options(AI.AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled))
+                    coords = AI.AI_Manager.Options(AI.AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled))
+                    self.handleMouseClick(coords)
+                else:
+                    pass
             
             self.BoxesFilled += 1
 
@@ -212,7 +215,7 @@ class AIBoardScene():
     def getCounters(self, board):
         return AI.AI.setPlayers(AI.AI(0,board))
 
-    def handleMouseClick(self, pos, BoxesFilled, board):        
+    def handleMouseClick(self, pos):        
         thread = ThreadPool(processes=1)
         coordinates = {
             "00" : (-107,7,107),
