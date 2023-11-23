@@ -28,15 +28,15 @@ ursina.camera.fov = 90
 ursina.camera.position = (0,0,0)
 ursina.camera.rotation = (0,0,0)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 DELAY_GL = 4 if (DEBUG_MODE!=True) else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
 ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-# GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
+GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+# GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
 
