@@ -120,43 +120,17 @@ class AIBoardScene():
 
         self.StatusText.text = "The game will be starting soon..."
 
-        self.running = True
-        self.BoxesFilled = 0
+        # self.ValidCoordinates  = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
 
-        self.currentPlayer = ''
-        self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
-        self.board = [['-'for _ in range(3)] for _ in range(3)]
-        self.StartingMove = ['00', '02', '20', '22', '11']
-        # self.First_Player = randint(0, 1)
-        self.First_Player = 0
+        # self.running = True
+        # self.BoxesFilled = 0
 
-        if self.BoxesFilled == 0:
-            self.player_Counter, self.Ai_Counter = 'O', 'X'
-        else:
-            self.player_Counter, self.Ai_Counter = 'X', 'O'
+        # self.currentPlayer = ''
+        # self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
+        # self.board = [['-'for _ in range(3)] for _ in range(3)]
+
 
         return self.startGame()
-
-
-    def GamePlay(self, mousePosition):
-        while self.BoxesFilled < 9:
-            if self.BoxesFilled == 0:
-                if self.First_Player == 0:
-                    self.StatusText.text = 'AI Move'
-                    print('AI')
-                    AI.AI_Manager.Options(AI.AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled))
-                else:
-                    print('player')
-                    self.StatusText.text = 'Player Move'
-                    # self.__Player_Manager()
-            else:
-                if self.BoxesFilled % 2 == 0:
-                    coords = AI.AI_Manager.Options(AI.AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates, self.BoxesFilled))
-                    self.handleMouseClick(coords)
-                else:
-                    pass
-            
-            self.BoxesFilled += 1
 
 
     def onBoardClick(self):
@@ -212,10 +186,12 @@ class AIBoardScene():
         newO.position = self.getPosFromCoords(coords, True)   # coords here are Board 00 01 coordinates Ai player 
         pass
 
-    def getCounters(self, board):
-        return AI.AI.setPlayers(AI.AI(0,board))
+    def Inintialise(self):
+        self.First_Player = randint(0,1)
+        return self.First_Player
 
-    def handleMouseClick(self, pos):        
+
+    def handleMouseClick(self, pos, BoxesFilled, board, Valid_Coordinates):        
         thread = ThreadPool(processes=1)
         coordinates = {
             "00" : (-107,7,107),
@@ -229,9 +205,46 @@ class AIBoardScene():
             "22" : (107,7,-107),
         }
 
-       
+        sent = False
+
+        key_list = list(coordinates.keys())
+        val_list = list(coordinates.values())
+
+        if BoxesFilled % 2 != 0 and self.First_Player != 0:
+            if not sent:
+                sent = True
+                return 'NEED COORDINATES', board, BoxesFilled
+            print('pdddddddddddddddos', pos)
+            sent = False
+
+        position = val_list.index(self.getPosFromCoords(pos, False))
+        xy = key_list[position]
+
+        s = AI.AI(BoxesFilled, board, self.Inintialise())
+        t = thread.apply_async(s.setCounters, (s.BoxesFilled, s.board, s.First_Player, xy))
+        position, win, board = t.get()
+
+        if self.First_Player == 0:
+            if BoxesFilled % 2 == 0:
+                self.placeX(coordinates[position])
+            else:
+                self.placeO(coordinates[position])
+        else:
+            if BoxesFilled % 2 == 0:
+                self.placeX(coordinates[position])
+            else:
+                self.placeO(coordinates[position])
+
+        if self.First_Player == 0:
+            self.placeX(position)
+        else:
+            self.placeX(position)
 
 
+        
+        print('BYE')
+        return win, board, BoxesFilled
+        
     def destroy(self):
         global MENU_GLOBAL
         STATES["AIScene"] = False

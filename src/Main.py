@@ -31,20 +31,21 @@ ursina.camera.fov = 90
 ursina.camera.position = (0,0,0)
 ursina.camera.rotation = (0,0,0)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 DELAY_GL = 4 if (DEBUG_MODE!=True) else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
 ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-# GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-GameManager.BOARD_SCENE_GLOBAL = GameManager.AIBoardScene()
-GameManager.BOARD_SCENE_GLOBAL.setStatusText = 'CLick Anywhere to start'
+GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+# GameManager.BOARD_SCENE_GLOBAL = GameManager.AIBoardScene()
+# GameManager.BOARD_SCENE_GLOBAL.setStatusText = 'CLick Anywhere to start'
 
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
 start = False
+Valid_Coordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
 
 def update():
     if GameManager.STATES["IN_MENU"]:
@@ -74,8 +75,13 @@ def input(key):
                     values = GameManager.BOARD_SCENE_GLOBAL.receive()
 
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'AIBoardScene':
-                        values = ''
-                        values, board = GameManager.BOARD_SCENE_GLOBAL.GamePlay(mouse.world_point)
+                        sent = False
+                        while not sent:
+                            values, board, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board, Valid_Coordinates)
+                            if values != 'NEED COORDIANTES':
+                                sent = True
+                            else:
+                                values, board, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board, Valid_Coordinates)
         
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
                     values, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
@@ -85,11 +91,7 @@ def input(key):
                     return
                 
                 BoxesFilled += 1
-                try:
-                    GameManager.BOARD_SCENE_GLOBAL.board = board
-                    GameManager.BOARD_SCENE_GLOBAL.BoxesFilled += 1
-                except Exception:
-                    pass
+
                 # print(f'Boxes FIlled : {BoxesFilled}')
                 if BoxesFilled == 9:
                     global app
@@ -97,8 +99,11 @@ def input(key):
                     print('*[ Draw ]*')
                     #sys.exit()
                     ursina.invoke(sys.exit,delay=5)
+
+                if values == 'NO WIN':
+                    pass
                 
-                if values != None:
+                elif values != None:
                     print(values)
                     MSG = ""
                     if values=="*[ You have Won ]*":
@@ -107,14 +112,12 @@ def input(key):
                         MSG = 'P1'
                     elif values == '*[ Player 2 has Won ]*':
                         MSG = 'P2'
-                    elif values == '*[ Your opponent has won ]*':
+                    elif values == '*[ Your opponent has won ]*' or values == '*[ AI has won ]*':
                         MSG = 'LOSE'
                     elif values == 'DRAW':
                         global app
                         UserInterface.showEndScreen("DRAW")
-                        ursina.invoke(sys.exit,delay=5)
-                    
-    
+                        ursina.invoke(sys.exit,delay=5)                    
                          
                     UserInterface.showEndScreen(MSG)
                     ursina.invoke(sys.exit,delay=5)

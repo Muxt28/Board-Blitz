@@ -23,94 +23,118 @@ class VerifyWin:
 
         for rows in range(3):
             if self.board[rows] == ['X','X','X']:
-                print(f'*[ {self.x} has Won ]*')
-                return False
+                return f'*[ {self.x} has Won ]*'
             elif self.board[rows] == ['O','O','O']:
-                print(f'*[ {self.o} has Won ]*')
-                return False
+                return '*[ {self.o} has Won ]*'
         # Check Vertically :
         for columns in range(3):
             score = [self.board[0][columns], self.board[1][columns], self.board[2][columns]]
             if score == ['X','X','X']:
-                print(f'*[ {self.x} has Won ]*')
-                return False
+                return f'*[ {self.x} has Won ]*'
             elif score == ['O','O','O']:
-                print(f'*[ {self.o} has Won ]*')
-                return False
+                return f'*[ {self.o} has Won ]*'
         # Check Diagonally :
         if [self.board[0][0], self.board[1][1], self.board[2][2]] == ['X','X','X']:
-            print(f'*[ {self.x} has Won ]*')
-            return False
+            return f'*[ {self.x} has Won ]*'
         elif [self.board[0][0], self.board[1][1], self.board[2][2]] == ['O','O','O']:
-            print(f'*[ {self.o} has Won ]*')
-            return False
+            return f'*[ {self.o} has Won ]*'
         elif [self.board[0][2], self.board[1][1], self.board[2][0]] == ['X','X','X']:
-            print(f'*[ {self.x} has Won ]*')
-            return False
+            return f'*[ {self.x} has Won ]*'
         elif [self.board[0][2], self.board[1][1], self.board[2][0]] == ['O','O','O']:
-            print(f'*[ {self.o} has Won ]*')
-            return False
+            return f'*[ {self.o} has Won ]*'
 
-        return True
-
+        return 'NO WIN'
 
 
-    # def __displayBoard(self):
-    #     for rows in self.board:
-    #         print(' '.join(rows))
-    #     print('\n')
+class AI:
+    def __init__(self, BoxesFileed, board, First_Player):
+        self.running = True
+        self.BoxesFilled = BoxesFileed
 
-    def setCounters(self):
-        if self.BoxesFilled == 0:
+        self.currentPlayer = ''
 
-        # while self.running:
-        #     if self.BoxesFilled % 2 == 0:
-        #         AI_Manager.Options(AI_Manager(self.player_Counter, self.Ai_Counter, self.board, self.ValidCoordinates))
-        #     elif self.BoxesFilled % 2 != 0:
-        #         self.__Player_Manager()
+        self.ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
+        self.board = board
 
-            self.running = VerifyWin.returnBoard(VerifyWin(self.board, self.First_Player))
+        self.StartingMove = ['00', '02', '20', '22', '11']
 
-            self.BoxesFilled += 1
+        self.First_Player = First_Player
 
-            if self.BoxesFilled == 9:
-                print("*[ It's A Draw ]*")
-                self.running = False
+        print('ggggggggggggg')
+        # self.First_Player = 0
 
-        return self.board
+        # 0 = AI
+        # 1 = Player
 
 
-    def __Player_Manager(self):
+    def setCounters(self, BoxesFileed, board, First_Player, pos):
 
-        self.board[x][y] = self.player_Counter
+        StartingMove = ['00', '02', '20', '22', '11']
+        ValidCoordinates = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
+
+        if BoxesFileed == 0:
+            if First_Player == 0:
+                player_Counter, Ai_Counter = 'O', 'X'
+
+                xy = StartingMove[randint(0, 4)]
+                print('AI Starts', xy)
+                x, y = int(xy[0]), int(xy[1])
+                board[int(x)][int(y)] = Ai_Counter
+
+            else:
+                player_Counter, Ai_Counter = 'X', 'O'
+                board = self.Player_Manager(ValidCoordinates, board, player_Counter, pos, First_Player)
+            
+            self.running = VerifyWin.returnBoard(VerifyWin(board, First_Player))
+        else:
+
+            if First_Player == 0:
+                player_Counter, Ai_Counter = 'O', 'X'
+            else:
+                player_Counter, Ai_Counter = 'X', 'O'
+
+            if self.BoxesFilled % 2 == 0:
+                print('AI TURN')
+                AI_Manager.Options(AI_Manager(player_Counter, Ai_Counter, board, ValidCoordinates))
+            elif self.BoxesFilled % 2 != 0:
+                self.Player_Manager(ValidCoordinates, board, player_Counter, pos, First_Player)
+
+            self.running = VerifyWin.returnBoard(VerifyWin(board, First_Player))
+
+
+
+        return pos, self.running, board
+
+
+    def Player_Manager(self, ValidCoordinates, board, player_Counter, pos, First_Player):
+        print('Player Turn')
+        x, y = int(pos[0]), int(pos[1])
+        board[x][y] = player_Counter
+        return board
+        
 
 
 class AI_Manager:
 
-    def __init__(self, player_Counter, Ai_Counter, board, Valid_Coordinates, boxesFilled):
+    def __init__(self, player_Counter, Ai_Counter, board, Valid_Coordinates):
 
         self.player_Counter = player_Counter
         self.Ai_Counter = Ai_Counter
         self.board = board
-        self.Boxes_Filled = boxesFilled
 
         self.Valid_Coordinates = Valid_Coordinates
         self.StartingMove = ['00', '02', '20', '22', '11']
         sleep(randint(0, 2))
 
     def Options(self):
-        if self.Boxes_Filled == 0:
-            x,y = self.StartingMove[randint(0, 4)]
-            self.board[int(x)][int(y)] = self.Ai_Counter
-        else:
-            AttackReturn = self.__Attack()
-            if AttackReturn == 'DEFENCE' :
-                # print(f'Attacking : {AttackReturn}')
-                DefenceReturn = self.__Defence()
-                if DefenceReturn == 'PLAY':
-                    # print(f'Defence : {DefenceReturn}')
-                    playing = self.__play()
-                    return playing
+        AttackReturn = self.__Attack()
+        if AttackReturn == 'DEFENCE' :
+            # print(f'Attacking : {AttackReturn}')
+            DefenceReturn = self.__Defence()
+            if DefenceReturn == 'PLAY':
+                # print(f'Defence : {DefenceReturn}')
+                playing = self.__play()
+                return playing
 
     def __Defence(self):
     # check Horizantolly :
@@ -268,6 +292,9 @@ class AI_Manager:
                 return self.board
             else:
                 self.Valid_Coordinates.remove(coord)
+
+
+
 
 # for rows in board:
 #     print(' '.join(rows))
