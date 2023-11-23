@@ -74,11 +74,26 @@ def input(key):
                         UserInterface.showEndScreen("DRAW")
                         print('*[ Draw ]*')
                         #sys.exit()
-                        ursina.invoke(sys.exit,delay=5)
-                    
-                    if values != None:
-                        print(values)
-                        UserInterface.showEndScreen("WIN" if values=="*[ Player 1 has Won ]*" else "LOSE")
-                        ursina.invoke(sys.exit,delay=5)
+                        ursina.invoke(sys.exit,delay=2)
+
+                
+                if values != None:
+                    print(values)
+                    MSG = ""
+                    if values=="*[ You have Won ]*":
+                        MSG = 'WIN'
+                    elif values == '*[ Player 1 has Won ]*':
+                        MSG = 'P1'
+                    elif values == '*[ Player 2 has Won ]*':
+                        MSG = 'P2'
+                    elif values == '*[ Your opponent has won ]*' or values == '*[ AI has won ]*':
+                        MSG = 'LOSE'
+                    elif values == 'DRAW':
+                        global app
+                        UserInterface.showEndScreen("DRAW")
+                        ursina.invoke(sys.exit,delay=2)                    
+                         
+                    UserInterface.showEndScreen(MSG)
+                    ursina.invoke(sys.exit,delay=2)
                         
 app.run()

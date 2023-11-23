@@ -26,8 +26,8 @@ def showEndScreen(TYPE):
     messages={
         "DRAW" : "You had a Draw!",
         "WIN" : "You won! Good game!",
-        "LOSE" : "Your Opponent has won"
-        "P1" : "Player 1 has won"
+        "LOSE" : "Your Opponent has won",
+        "P1" : "Player 1 has won",
         "P2" : "Player 2 has won"
     }
 
