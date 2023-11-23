@@ -39,8 +39,13 @@ ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
 GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+<<<<<<< HEAD
 # GameManager.BOARD_SCENE_GLOBAL = GameManager.AIBoardScene()
 # GameManager.BOARD_SCENE_GLOBAL.setStatusText = 'CLick Anywhere to start'
+=======
+#GameManager.BOARD_SCENE_GLOBAL = GameManager.AIBoardScene()
+#GameManager.BOARD_SCENE_GLOBAL.setStatusText = 'CLick Anywhere to start'
+>>>>>>> c3418847d82bda7b3fe8bddfdf344848ebc6ebb9
 
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
@@ -75,6 +80,7 @@ def input(key):
                     values = GameManager.BOARD_SCENE_GLOBAL.receive()
 
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'AIBoardScene':
+<<<<<<< HEAD
                         sent = False
                         while not sent:
                             values, board, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board, Valid_Coordinates)
@@ -83,17 +89,31 @@ def input(key):
                             else:
                                 values, board, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board, Valid_Coordinates)
         
+=======
+                    values = ''
+                    values, board = GameManager.BOARD_SCENE_GLOBAL.GamePlay(mouse.world_point)
+    
+>>>>>>> c3418847d82bda7b3fe8bddfdf344848ebc6ebb9
                 elif GameManager.BOARD_SCENE_GLOBAL.__class__.__name__ == 'ThreeXThreeBoardScene':
-                    values, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, BoxesFilled, board)
+                    values, BoxesFilled = GameManager.BOARD_SCENE_GLOBAL.handleMouseClick(mouse.world_point, board)
                 
                 if values == 'NOT VALID':
                     GameManager.BOARD_SCENE_GLOBAL.StatusText = '*[ Move Not Valid ]*'
                     return
                 
+<<<<<<< HEAD
                 BoxesFilled += 1
 
+=======
+                #GameManager.BOARD_SCENE_GLOBAL.BoxesFilled += 1
+                try:
+                    GameManager.BOARD_SCENE_GLOBAL.board = board
+                    GameManager.BOARD_SCENE_GLOBAL.BoxesFilled += 1
+                except Exception:
+                    pass
+>>>>>>> c3418847d82bda7b3fe8bddfdf344848ebc6ebb9
                 # print(f'Boxes FIlled : {BoxesFilled}')
-                if BoxesFilled == 9:
+                if GameManager.BOARD_SCENE_GLOBAL.BoxesFilled == 9:
                     global app
                     UserInterface.showEndScreen("DRAW")
                     print('*[ Draw ]*')
