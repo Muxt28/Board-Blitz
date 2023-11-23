@@ -28,15 +28,15 @@ ursina.camera.fov = 90
 ursina.camera.position = (0,0,0)
 ursina.camera.rotation = (0,0,0)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 DELAY_GL = 4 if (DEBUG_MODE!=True) else 0
 SplashScreen = UserInterface.ShowLoadingSplash()
 ursina.invoke(UserInterface.destroyEntity, SplashScreen, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingInput", True, delay=DELAY_GL)
 ursina.invoke(InputHandler.SetInputState, "TrackingMouse", True, delay=DELAY_GL)
 
-# GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
-GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
+GameManager.MENU_GLOBAL = GameManager.Menu((not DEBUG_MODE))
+# GameManager.BOARD_SCENE_GLOBAL = GameManager.ThreeXThreeBoardScene()
 BoxesFilled = 0
 board = [['-'for _ in range(3)] for _ in range(3)]
 
@@ -74,11 +74,26 @@ def input(key):
                         UserInterface.showEndScreen("DRAW")
                         print('*[ Draw ]*')
                         #sys.exit()
-                        ursina.invoke(sys.exit,delay=5)
-                    
-                    if values != None:
-                        print(values)
-                        UserInterface.showEndScreen("WIN" if values=="*[ Player 1 has Won ]*" else "LOSE")
-                        ursina.invoke(sys.exit,delay=5)
+                        ursina.invoke(sys.exit,delay=2)
+
+                
+                if values != None:
+                    print(values)
+                    MSG = ""
+                    if values=="*[ You have Won ]*":
+                        MSG = 'WIN'
+                    elif values == '*[ Player 1 has Won ]*':
+                        MSG = 'P1'
+                    elif values == '*[ Player 2 has Won ]*':
+                        MSG = 'P2'
+                    elif values == '*[ Your opponent has won ]*' or values == '*[ AI has won ]*':
+                        MSG = 'LOSE'
+                    elif values == 'DRAW':
+                        global app
+                        UserInterface.showEndScreen("DRAW")
+                        ursina.invoke(sys.exit,delay=2)                    
+                         
+                    UserInterface.showEndScreen(MSG)
+                    ursina.invoke(sys.exit,delay=2)
                         
 app.run()
