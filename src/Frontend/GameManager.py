@@ -440,6 +440,7 @@ class ThreeXThreeBoardScene():
         self.Back.on_click = self.destroy
         self.Back.text_entity.scale = 14
         self.hasGameStarted=False
+        self.BoxesFilled = 0
         # self.StatusText = ursina.Text(
         #     text="The game will be starting soon...",
         #     position = ursina.window.top,
@@ -500,7 +501,7 @@ class ThreeXThreeBoardScene():
         newO.position = self.getPosFromCoords(coords)    
         pass
 
-    def handleMouseClick(self, pos, BoxesFilled, board):        
+    def handleMouseClick(self, pos, board):        
         thread = ThreadPool(processes=1)
         coordinates = {
             "00" : (-107,7,107),
@@ -522,13 +523,13 @@ class ThreeXThreeBoardScene():
         xy = key_list[position]
         x, y = int(xy[0]), int(xy[1])
         if board[x][y] == '-':
-            threadReturn = thread.apply_async(Library.LocalPlayer.GamePlay, (Library.LocalPlayer(BoxesFilled, key_list[position], board),))
+            threadReturn = thread.apply_async(Library.LocalPlayer.GamePlay, (Library.LocalPlayer(self.BoxesFilled, key_list[position], board),))
             win, board = threadReturn.get()
         else:
             return 'NOT VALID', board
-
+        
         if pos != None:
-            if BoxesFilled % 2 == 0:
+            if self.BoxesFilled % 2 == 0:
                 self.placeX(pos)
             else:
                 self.placeO(pos)
